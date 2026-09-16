@@ -4,9 +4,9 @@ A take-home for Composio's AI Product Ops Intern role. It asks one question abou
 apps: could an AI agent use each one today, and if not, what is stopping it.
 
 **Report:** https://composio-app-research-cfcmadlad.vercel.app/
-**Repo:** https://github.com/cfcmadlad/composio-app-research
 
-Prepared by Aditya Rayaprolu ([@cfcmadlad](https://github.com/cfcmadlad)).
+Prepared by Aditya Rayaprolu ([@cfcmadlad](https://github.com/cfcmadlad)). This repo is
+the code behind that report.
 
 ## What's here
 
