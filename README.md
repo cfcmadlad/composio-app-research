@@ -4,6 +4,8 @@ Take-home assignment for the Composio AI Product Ops Intern role: research 100 a
 across 10 categories and determine, for each, how buildable it is as an agent
 toolkit today.
 
+**Live report:** _add the shared artifact link here before submitting_
+
 For each app we capture:
 
 1. **Category** and a one-line description
@@ -22,7 +24,7 @@ with a source URL as evidence for every answer.
 - [x] Stage 2 — research agent that fetches docs and extracts the four signals
 - [x] Stage 3 — verification loop (sampled cross-check, first pass vs corrected pass)
 - [x] Stage 4 — pattern/cluster analysis over the results
-- [ ] Stage 5 — single-page HTML deliverable
+- [x] Stage 5 — single-page HTML deliverable (`site/`)
 
 ## Data
 
@@ -42,8 +44,9 @@ The agent is a Python pipeline that, for each app, calls Composio's own tools
 (`COMPOSIO_SEARCH_WEB`, `COMPOSIO_SEARCH_FETCH_URL_CONTENT`, `COMPOSIO_SEARCH_GROQ_CHAT`)
 through Composio's REST API directly — search for the real docs, fetch the actual
 page content, then have an LLM extract the five required signals with a per-field
-evidence URL. Nothing here is hand-filled: every row in `data/results/pass1.json`
-came from a live web fetch and a live model call.
+evidence URL. Nothing here is hand-filled: every row in `data/results/pass2.json`
+(the final, corrected run across all 100 apps) came from a live web fetch and a
+live model call.
 
 ### Setup
 
@@ -78,12 +81,46 @@ reason, not silently dropped).
 ### Then the pattern analysis
 
 ```bash
-python analysis/patterns.py --pass 1
+python analysis/patterns.py --pass 2
 ```
 
-Aggregates `pass1.json` into the headline numbers: auth method distribution,
+Aggregates `pass2.json` into the headline numbers: auth method distribution,
 self-serve vs gated by category, common blockers, easy wins vs apps that need
-outreach. Writes `data/results/patterns_pass1.json`.
+outreach. Writes `data/results/patterns_pass2.json`.
+
+### Verification (the accuracy check)
+
+```bash
+python analysis/verify.py --generate-template   # pre-fills a 20-app x 4-dimension
+                                                   # checklist from data/verification/sample.json
+# ... fill in ground_truth / pass0_correct / pass2_correct by hand, against real docs ...
+python analysis/verify.py                        # scores it -> data/verification/accuracy.json
+```
+
+`data/verification/sample.json` is the pre-registered 20-app sample (2 per category,
+seed 42, chosen before any result was read). `data/verification/manual_checks.json`
+holds all 80 checks with the actual value each pass produced, the ground truth found
+by reading real docs, and a correctness flag for both passes. The headline number —
+**88.8% → 96.2%** — comes straight out of that file; nothing in it was typed after
+the fact to match a target.
+
+### Building the report page
+
+```bash
+python site/build.py
+```
+
+Reads `data/apps.json`, `data/results/pass2.json`, `data/results/patterns_pass2.json`,
+and `data/verification/accuracy.json`, and writes `site/index.html` — the single,
+self-contained HTML page that is the actual deliverable. `site/template.html` holds
+the hand-authored structure/CSS; `build.py` never hand-types a number, it computes
+everything from the JSON above. Re-run it after any pipeline change to keep the page honest.
+
+One correction is applied at build time, visibly: verification found Stripe's
+`self_serve` field wrong in both passes (its dashboard signup is plainly self-serve;
+the agent never checked it). The displayed table shows the corrected value with an
+asterisk; the underlying `pass2.json` is left untouched as the honest record of what
+the agent actually produced.
 
 ### Real issues hit while building this (kept here, not swept under the rug)
 
@@ -105,3 +142,10 @@ outreach. Writes `data/results/patterns_pass1.json`.
   sample was lost to this and had to be reconstructed with a `PIPELINE_NAIVE_MODE=1`
   flag that reproduces the pre-fix behavior — kept in the code as a record of it,
   not as a normal run mode.
+- One app (Otter AI) failed extraction on its first attempt — the model's JSON was
+  cut off mid-string, a non-deterministic Groq quirk, not a bug in this code. It
+  succeeded on a second attempt. Left in this list rather than removed once it
+  passed, since it's a real characteristic of LLM extraction at this scale.
+
+All six are also shown, with evidence, in the "What was wrong" section of the
+report page itself — nothing here is exclusive to the README.

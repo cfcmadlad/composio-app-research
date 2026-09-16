@@ -1,0 +1,329 @@
+<title>The Buildability Ledger</title>
+<style>
+  /* Committed to a single light theme, deliberately - this is a professional
+     report meant to read the same way for every viewer, not a themed artifact. */
+  :root {
+    --bg: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-2: #E8EDF5;
+    --ink: #0B1220;
+    --ink-2: #55606E;
+    --line: #D7DEE8;
+    --accent: #034694;
+    --good: #1B7A3D;
+    --warn: #8A5F12;
+    --bad: #C8342A;
+    --flag: #5B6B85;
+    --radius: 3px;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  h1, h2, h3 { font-family: "Source Serif 4", Georgia, "Times New Roman", serif; text-wrap: balance; font-weight: 600; }
+  code, .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+
+  .page { max-width: 1040px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* ---------- Header ---------- */
+  header.masthead { border-bottom: 1px solid var(--line); padding-bottom: 32px; margin-bottom: 40px; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-2); margin-bottom: 10px;
+  }
+  h1.title { font-size: clamp(34px, 5vw, 54px); margin: 0 0 14px; color: var(--ink); }
+  p.subhead { max-width: 62ch; font-size: 18px; color: var(--ink-2); margin: 0 0 28px; }
+
+  .stat-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .stat-tile { background: var(--surface); padding: 16px 14px; }
+  .stat-tile-accent { background: var(--surface-2); }
+  .stat-num { font-family: "Source Serif 4", serif; font-weight: 600; font-size: 26px; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .stat-tile-accent .stat-num { color: var(--accent); }
+  .stat-label { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+  @media (max-width: 760px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---------- Sections ---------- */
+  section { margin: 56px 0; }
+  h2.section-title {
+    font-size: 13px; font-family: "IBM Plex Mono", monospace; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 18px; font-weight: 600;
+  }
+  h3.subsection-title { font-size: 24px; margin: 0 0 10px; }
+  p { margin: 0 0 16px; max-width: 72ch; }
+  .lede { font-size: 19px; color: var(--ink); max-width: 68ch; }
+
+  /* ---------- Patterns ---------- */
+  .pattern-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 32px; align-items: start; margin-top: 28px; }
+  @media (max-width: 800px) { .pattern-grid { grid-template-columns: 1fr; } }
+  .cat-row { display: grid; grid-template-columns: 220px 1fr 110px; align-items: center; gap: 10px; padding: 6px 0; }
+  .cat-name { font-size: 13.5px; color: var(--ink-2); }
+  .cat-bar { height: 8px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+  .cat-bar-fill { height: 100%; background: var(--good); }
+  .cat-frac { font-size: 12px; color: var(--ink-2); text-align: right; font-variant-numeric: tabular-nums; }
+  .gate-list { list-style: none; margin: 0; padding: 0; }
+  .gate-list li { padding: 10px 0; border-top: 1px solid var(--line); font-size: 14.5px; color: var(--ink-2); }
+  .gate-list li:first-child { border-top: none; }
+  .gate-list strong { color: var(--ink); font-weight: 600; }
+  .win-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; margin-top: 18px; display: flex; gap: 28px; }
+  .win-box .num { font-family: "Source Serif 4", serif; font-size: 30px; font-weight: 600; }
+  .win-box .num.good { color: var(--good); }
+  .win-box .num.warn { color: var(--warn); }
+  .win-box .win-label { font-size: 13px; color: var(--ink-2); }
+
+  /* ---------- Findings table ---------- */
+  .table-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .table-controls input, .table-controls select {
+    font-family: "IBM Plex Sans", sans-serif; font-size: 13.5px; padding: 7px 10px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink);
+  }
+  .table-controls input { flex: 1; min-width: 160px; }
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  table.findings { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--surface); }
+  table.findings th {
+    text-align: left; font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-2); padding: 10px 12px; border-bottom: 1px solid var(--line);
+    background: var(--surface-2); position: sticky; top: 0;
+  }
+  table.findings td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.findings tr:last-child td { border-bottom: none; }
+  .td-name a { color: var(--ink); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--accent); }
+  .td-name a:hover { color: var(--accent); }
+  .td-desc { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; max-width: 34ch; }
+  .td-category { color: var(--ink-2); font-size: 13px; white-space: nowrap; }
+  .corrected-mark { color: var(--accent); font-size: 11px; cursor: help; }
+
+  .badge {
+    display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 11px;
+    padding: 2px 7px; border-radius: 2px; border: 1px solid currentColor; margin: 1px 3px 1px 0;
+    white-space: nowrap;
+  }
+  .badge-good { color: var(--good); }
+  .badge-warn { color: var(--warn); }
+  .badge-bad { color: var(--bad); }
+  .badge-mcp { color: var(--accent); }
+  .badge-auth { color: var(--ink-2); border-color: var(--line); }
+
+  /* ---------- Agent section ---------- */
+  .diagram-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin: 24px 0; }
+  .diagram-wrap svg { width: 100%; height: auto; color: var(--ink); }
+  figcaption { font-size: 13px; color: var(--ink-2); margin-top: 10px; }
+
+  .bug-log { border-top: 1px solid var(--line); margin-top: 8px; }
+  .bug-item { padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .bug-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .bug-title::before { content: "\2014  "; color: var(--accent); }
+  .bug-body { font-size: 14.5px; color: var(--ink-2); max-width: 68ch; }
+  .bug-body code { background: var(--surface-2); padding: 1px 5px; border-radius: 2px; font-size: 13px; }
+
+  /* ---------- Verification ---------- */
+  .verify-headline { display: flex; align-items: baseline; gap: 18px; margin: 20px 0 32px; flex-wrap: wrap; }
+  .verify-num { font-family: "Source Serif 4", serif; font-size: 48px; font-weight: 600; }
+  .verify-arrow { font-size: 28px; color: var(--ink-2); }
+  table.dims { width: 100%; max-width: 620px; border-collapse: collapse; font-size: 14px; margin-bottom: 32px; }
+  table.dims th { text-align: left; font-family: "IBM Plex Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  table.dims td { padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  table.dims td.num { font-variant-numeric: tabular-nums; }
+
+  .miss-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .miss-item { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--bad); border-radius: var(--radius); padding: 12px 16px; }
+  .miss-head { font-size: 14.5px; margin-bottom: 6px; }
+  .miss-body { font-size: 13.5px; color: var(--ink-2); margin-bottom: 3px; }
+  .miss-body code { background: var(--surface-2); padding: 1px 5px; border-radius: 2px; }
+  .miss-evidence a { font-size: 12.5px; color: var(--accent); }
+  .miss-empty { color: var(--ink-2); font-style: italic; }
+
+  details.methodology { margin-top: 8px; }
+  details.methodology summary { cursor: pointer; color: var(--accent); font-size: 14px; }
+  details.methodology p { margin-top: 10px; font-size: 14.5px; color: var(--ink-2); }
+
+  footer { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 64px; font-size: 13.5px; color: var(--ink-2); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer a { color: var(--accent); }
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="eyebrow">AI Product Ops &mdash; Research Case Study</div>
+    <h1 class="title">The Buildability Ledger</h1>
+    <p class="subhead">One hundred applications, examined against a single question: can an AI agent use each one today, and if not, what stands in the way. A program did the research. A person checked its claims by hand. What follows is reported as found.</p>
+    <div class="stat-strip">{{STAT_TILES}}</div>
+  </header>
+
+  <section id="patterns">
+    <h2 class="section-title">The Pattern</h2>
+    <p class="lede">Most of these applications are already within reach. Ninety of the hundred are self&#8209;serve: a developer can obtain working credentials without speaking to anyone at the company. The remaining ten share a common shape &mdash; access comes through a relationship, not a form.</p>
+
+    <div class="pattern-grid">
+      <div>
+        <h3 class="subsection-title">Self&#8209;serve by category</h3>
+        <p style="font-size:14px;color:var(--ink-2);margin-bottom:20px;">Two categories are entirely self&#8209;serve: CRM and Sales, and Developer and Infrastructure platforms. Finance and Marketing carry the most friction.</p>
+        {{CAT_BREAKDOWN}}
+      </div>
+      <div>
+        <h3 class="subsection-title">Where the gate comes from</h3>
+        <p style="font-size:14px;color:var(--ink-2);margin-bottom:6px;">The ten gated apps give their own reasons for the gate. Read together, the friction falls into three groups:</p>
+        <ul class="gate-list">{{GATE_BUCKETS}}</ul>
+      </div>
+    </div>
+
+    <div class="win-box">
+      <div><div class="num good">{{EASY_WINS_N}}</div><div class="win-label">buildable today,<br>nothing to ask for</div></div>
+      <div><div class="num warn">{{NEEDS_OUTREACH_N}}</div><div class="win-label">need a conversation<br>before there is anything to build</div></div>
+    </div>
+  </section>
+
+  <section id="findings">
+    <h2 class="section-title">The Findings</h2>
+    <h3 class="subsection-title">All {{TOTAL_APPS}} apps</h3>
+    <p style="font-size:14px;color:var(--ink-2);">Every row links to the page it was drawn from. One entry, marked with an asterisk, was corrected after verification &mdash; see below for why.</p>
+    <div class="table-controls">
+      <input type="text" id="search-input" placeholder="Search by name&hellip;">
+      <select id="category-filter"><option value="">All categories</option>{{CATEGORY_OPTIONS}}</select>
+      <select id="selfserve-filter">
+        <option value="">Self-serve or gated</option>
+        <option value="yes">Self-serve only</option>
+        <option value="no">Gated only</option>
+      </select>
+    </div>
+    <div class="table-scroll">
+      <table class="findings" id="findings-table">
+        <thead><tr><th>App</th><th>Category</th><th>Auth</th><th>Access</th><th>MCP</th><th>Verdict</th></tr></thead>
+        <tbody>{{TABLE_ROWS}}</tbody>
+      </table>
+    </div>
+    <p id="empty-state" style="display:none;color:var(--ink-2);font-style:italic;margin-top:12px;">No apps match that filter.</p>
+  </section>
+
+  <section id="agent">
+    <h2 class="section-title">What Was Built</h2>
+    <p class="lede">A Python program produced the hundred rows above, not a person. For each app, it searched for documentation, fetched the actual pages, and asked a language model to read them and answer the four questions the brief poses. Composio's own tools did the searching and fetching &mdash; nothing here was typed from memory.</p>
+
+    <figure class="diagram-wrap">
+      <svg viewBox="0 0 920 300" role="img" aria-label="Pipeline diagram: for each app, search the web and fetch the hinted URL, feed both into an LLM extraction step, validate the JSON, retry once on failure, and either write the result or flag it for a human.">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+          </marker>
+        </defs>
+        <!-- boxes -->
+        <g font-family="IBM Plex Mono, monospace" font-size="12">
+          <rect x="10" y="120" width="120" height="56" rx="3" fill="none" stroke="currentColor"></rect>
+          <text x="70" y="144" text-anchor="middle">100 apps</text>
+          <text x="70" y="160" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="10">apps.json</text>
+
+          <rect x="190" y="120" width="130" height="56" rx="3" fill="none" stroke="currentColor"></rect>
+          <text x="255" y="144" text-anchor="middle">Search</text>
+          <text x="255" y="160" text-anchor="middle" opacity="0.6" font-size="9.5">COMPOSIO_SEARCH_WEB</text>
+
+          <rect x="380" y="120" width="150" height="56" rx="3" fill="none" stroke="currentColor"></rect>
+          <text x="455" y="140" text-anchor="middle">Fetch</text>
+          <text x="455" y="156" text-anchor="middle" opacity="0.6" font-size="9.5">up to 3 pages,</text>
+          <text x="455" y="168" text-anchor="middle" opacity="0.6" font-size="9.5">hint URL first</text>
+
+          <rect x="590" y="120" width="130" height="56" rx="3" fill="none" stroke="currentColor"></rect>
+          <text x="655" y="144" text-anchor="middle">Extract</text>
+          <text x="655" y="160" text-anchor="middle" opacity="0.6" font-size="9.5">Groq LLM &rarr; JSON</text>
+
+          <rect x="760" y="10" width="150" height="50" rx="3" fill="none" stroke="var(--good)"></rect>
+          <text x="835" y="30" text-anchor="middle" fill="var(--good)">pass2.json</text>
+          <text x="835" y="45" text-anchor="middle" fill="var(--good)" opacity="0.75" font-size="9.5">100/100 apps</text>
+
+          <rect x="760" y="200" width="150" height="60" rx="3" fill="none" stroke="var(--flag)"></rect>
+          <text x="835" y="222" text-anchor="middle" fill="var(--flag)">needs_human</text>
+          <text x="835" y="237" text-anchor="middle" fill="var(--flag)" opacity="0.8" font-size="9">still invalid after</text>
+          <text x="835" y="249" text-anchor="middle" fill="var(--flag)" opacity="0.8" font-size="9">one retry</text>
+        </g>
+        <!-- arrows -->
+        <g stroke="currentColor" fill="none" stroke-width="1.3">
+          <line x1="130" y1="148" x2="188" y2="148" marker-end="url(#arrow)"></line>
+          <line x1="320" y1="148" x2="378" y2="148" marker-end="url(#arrow)"></line>
+          <line x1="530" y1="148" x2="588" y2="148" marker-end="url(#arrow)"></line>
+          <path d="M720,135 C742,110 742,55 758,38" marker-end="url(#arrow)"></path>
+          <path d="M720,160 C742,185 742,225 758,228" stroke="var(--flag)" marker-end="url(#arrow)"></path>
+          <path d="M700,118 C680,90 640,80 620,105" marker-end="url(#arrow)"></path>
+        </g>
+        <text x="740" y="70" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="currentColor" opacity="0.7">valid JSON</text>
+        <text x="742" y="196" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="var(--flag)">still invalid</text>
+        <text x="600" y="88" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="currentColor" opacity="0.7">retry once, with correction</text>
+      </svg>
+      <figcaption>The extraction step validates its own JSON output and, on failure, is given one corrected retry before an app is set aside for a person to look at. In the final run, every app produced valid output &mdash; one (Otter AI) only on the second attempt.</figcaption>
+    </figure>
+
+    <h3 class="subsection-title">Where it was wrong, and what was done about it</h3>
+    <p style="font-size:14.5px;color:var(--ink-2);">Six real problems came up while building this. None were staged for the write&#8209;up; each is recorded here as it happened.</p>
+    <div class="bug-log">{{BUG_LOG}}</div>
+  </section>
+
+  <section id="verification">
+    <h2 class="section-title">Verification</h2>
+    <p class="lede">Twenty applications &mdash; two from each of the ten categories &mdash; were chosen before any result was read, so the sample could not be shaped by what it would go on to show. Each was checked by hand against real developer documentation, across four dimensions: auth method, self&#8209;serve status, API surface, and buildability. Eighty checks in total.</p>
+
+    <div class="verify-headline">
+      <div><div class="verify-num" style="color:var(--warn)">{{PASS0_ACC}}%</div><div style="font-size:13px;color:var(--ink-2)">first pass &middot; {{PASS0_CORRECT}}/{{TOTAL_CHECKS}} correct</div></div>
+      <div class="verify-arrow">&rarr;</div>
+      <div><div class="verify-num" style="color:var(--good)">{{PASS2_ACC}}%</div><div style="font-size:13px;color:var(--ink-2)">after the fixes below &middot; {{PASS2_CORRECT}}/{{TOTAL_CHECKS}} correct</div></div>
+    </div>
+
+    <table class="dims">
+      <thead><tr><th>Dimension</th><th>Pass 1</th><th>Pass 2</th></tr></thead>
+      <tbody>{{DIM_ROWS}}</tbody>
+    </table>
+
+    <h3 class="subsection-title">What pass one got wrong</h3>
+    {{PASS0_MISSES}}
+
+    <h3 class="subsection-title" style="margin-top:32px;">What survived the fix</h3>
+    <p style="font-size:14.5px;color:var(--ink-2);">Three mistakes survived the correction. One of them &mdash; Stripe &mdash; was wrong in both passes, in the same direction, for the same reason: the extraction never checked the plainest evidence available, the signup page itself. It is left here rather than quietly repaired.</p>
+    {{PASS2_MISSES}}
+
+    <details class="methodology">
+      <summary>Sample and method</summary>
+      <p>Sample (seed 42, stratified two per category): {{SAMPLE_NAMES}}.</p>
+      <p>The pass shown here as "pass one" was reconstructed under the original, unfixed search logic and run only against this sample. The real hundred&#8209;app first pass was lost to a bug in the results writer, described in the Agent section above rather than left out. Both passes were then scored against the same, independently established ground truth for each of the eighty checks, so the comparison holds.</p>
+    </details>
+  </section>
+
+  <footer>
+    <div>Generated from <code>data/results/pass2.json</code> and <code>data/verification/</code>. Re&#8209;run <code>python site/build.py</code> to regenerate after any change to the pipeline.</div>
+    <div><a href="https://github.com/cfcmadlad/composio-app-research" target="_blank" rel="noopener">Source repository &rarr;</a></div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.find-row'));
+  var searchInput = document.getElementById('search-input');
+  var categoryFilter = document.getElementById('category-filter');
+  var selfServeFilter = document.getElementById('selfserve-filter');
+  var emptyState = document.getElementById('empty-state');
+
+  function applyFilters() {
+    var q = searchInput.value.trim().toLowerCase();
+    var cat = categoryFilter.value;
+    var ss = selfServeFilter.value;
+    var visible = 0;
+    rows.forEach(function (row) {
+      var name = row.querySelector('.td-name a').textContent.toLowerCase();
+      var matchesQuery = !q || name.indexOf(q) !== -1;
+      var matchesCat = !cat || row.getAttribute('data-category') === cat;
+      var matchesSS = !ss || row.getAttribute('data-selfserve') === ss;
+      var show = matchesQuery && matchesCat && matchesSS;
+      row.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    emptyState.style.display = visible === 0 ? '' : 'none';
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+  categoryFilter.addEventListener('change', applyFilters);
+  selfServeFilter.addEventListener('change', applyFilters);
+})();
+</script>

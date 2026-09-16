@@ -1,0 +1,1404 @@
+<title>The Buildability Ledger</title>
+<style>
+  /* Committed to a single light theme, deliberately - this is a professional
+     report meant to read the same way for every viewer, not a themed artifact. */
+  :root {
+    --bg: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-2: #E8EDF5;
+    --ink: #0B1220;
+    --ink-2: #55606E;
+    --line: #D7DEE8;
+    --accent: #034694;
+    --good: #1B7A3D;
+    --warn: #8A5F12;
+    --bad: #C8342A;
+    --flag: #5B6B85;
+    --radius: 3px;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  h1, h2, h3 { font-family: "Source Serif 4", Georgia, "Times New Roman", serif; text-wrap: balance; font-weight: 600; }
+  code, .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+
+  .page { max-width: 1040px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* ---------- Header ---------- */
+  header.masthead { border-bottom: 1px solid var(--line); padding-bottom: 32px; margin-bottom: 40px; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-2); margin-bottom: 10px;
+  }
+  h1.title { font-size: clamp(34px, 5vw, 54px); margin: 0 0 14px; color: var(--ink); }
+  p.subhead { max-width: 62ch; font-size: 18px; color: var(--ink-2); margin: 0 0 28px; }
+
+  .stat-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .stat-tile { background: var(--surface); padding: 16px 14px; }
+  .stat-tile-accent { background: var(--surface-2); }
+  .stat-num { font-family: "Source Serif 4", serif; font-weight: 600; font-size: 26px; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .stat-tile-accent .stat-num { color: var(--accent); }
+  .stat-label { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; }
+  @media (max-width: 760px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---------- Sections ---------- */
+  section { margin: 56px 0; }
+  h2.section-title {
+    font-size: 13px; font-family: "IBM Plex Mono", monospace; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 18px; font-weight: 600;
+  }
+  h3.subsection-title { font-size: 24px; margin: 0 0 10px; }
+  p { margin: 0 0 16px; max-width: 72ch; }
+  .lede { font-size: 19px; color: var(--ink); max-width: 68ch; }
+
+  /* ---------- Patterns ---------- */
+  .pattern-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 32px; align-items: start; margin-top: 28px; }
+  @media (max-width: 800px) { .pattern-grid { grid-template-columns: 1fr; } }
+  .cat-row { display: grid; grid-template-columns: 220px 1fr 110px; align-items: center; gap: 10px; padding: 6px 0; }
+  .cat-name { font-size: 13.5px; color: var(--ink-2); }
+  .cat-bar { height: 8px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+  .cat-bar-fill { height: 100%; background: var(--good); }
+  .cat-frac { font-size: 12px; color: var(--ink-2); text-align: right; font-variant-numeric: tabular-nums; }
+  .gate-list { list-style: none; margin: 0; padding: 0; }
+  .gate-list li { padding: 10px 0; border-top: 1px solid var(--line); font-size: 14.5px; color: var(--ink-2); }
+  .gate-list li:first-child { border-top: none; }
+  .gate-list strong { color: var(--ink); font-weight: 600; }
+  .win-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; margin-top: 18px; display: flex; gap: 28px; }
+  .win-box .num { font-family: "Source Serif 4", serif; font-size: 30px; font-weight: 600; }
+  .win-box .num.good { color: var(--good); }
+  .win-box .num.warn { color: var(--warn); }
+  .win-box .win-label { font-size: 13px; color: var(--ink-2); }
+
+  /* ---------- Findings table ---------- */
+  .table-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .table-controls input, .table-controls select {
+    font-family: "IBM Plex Sans", sans-serif; font-size: 13.5px; padding: 7px 10px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink);
+  }
+  .table-controls input { flex: 1; min-width: 160px; }
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  table.findings { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--surface); }
+  table.findings th {
+    text-align: left; font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-2); padding: 10px 12px; border-bottom: 1px solid var(--line);
+    background: var(--surface-2); position: sticky; top: 0;
+  }
+  table.findings td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.findings tr:last-child td { border-bottom: none; }
+  .td-name a { color: var(--ink); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--accent); }
+  .td-name a:hover { color: var(--accent); }
+  .td-desc { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; max-width: 34ch; }
+  .td-category { color: var(--ink-2); font-size: 13px; white-space: nowrap; }
+  .corrected-mark { color: var(--accent); font-size: 11px; cursor: help; }
+
+  .badge {
+    display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 11px;
+    padding: 2px 7px; border-radius: 2px; border: 1px solid currentColor; margin: 1px 3px 1px 0;
+    white-space: nowrap;
+  }
+  .badge-good { color: var(--good); }
+  .badge-warn { color: var(--warn); }
+  .badge-bad { color: var(--bad); }
+  .badge-mcp { color: var(--accent); }
+  .badge-auth { color: var(--ink-2); border-color: var(--line); }
+
+  /* ---------- Agent section ---------- */
+  .diagram-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin: 24px 0; }
+  .diagram-wrap svg { width: 100%; height: auto; color: var(--ink); }
+  figcaption { font-size: 13px; color: var(--ink-2); margin-top: 10px; }
+
+  .bug-log { border-top: 1px solid var(--line); margin-top: 8px; }
+  .bug-item { padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .bug-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .bug-title::before { content: "\2014  "; color: var(--accent); }
+  .bug-body { font-size: 14.5px; color: var(--ink-2); max-width: 68ch; }
+  .bug-body code { background: var(--surface-2); padding: 1px 5px; border-radius: 2px; font-size: 13px; }
+
+  /* ---------- Verification ---------- */
+  .verify-headline { display: flex; align-items: baseline; gap: 18px; margin: 20px 0 32px; flex-wrap: wrap; }
+  .verify-num { font-family: "Source Serif 4", serif; font-size: 48px; font-weight: 600; }
+  .verify-arrow { font-size: 28px; color: var(--ink-2); }
+  table.dims { width: 100%; max-width: 620px; border-collapse: collapse; font-size: 14px; margin-bottom: 32px; }
+  table.dims th { text-align: left; font-family: "IBM Plex Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  table.dims td { padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  table.dims td.num { font-variant-numeric: tabular-nums; }
+
+  .miss-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .miss-item { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--bad); border-radius: var(--radius); padding: 12px 16px; }
+  .miss-head { font-size: 14.5px; margin-bottom: 6px; }
+  .miss-body { font-size: 13.5px; color: var(--ink-2); margin-bottom: 3px; }
+  .miss-body code { background: var(--surface-2); padding: 1px 5px; border-radius: 2px; }
+  .miss-evidence a { font-size: 12.5px; color: var(--accent); }
+  .miss-empty { color: var(--ink-2); font-style: italic; }
+
+  details.methodology { margin-top: 8px; }
+  details.methodology summary { cursor: pointer; color: var(--accent); font-size: 14px; }
+  details.methodology p { margin-top: 10px; font-size: 14.5px; color: var(--ink-2); }
+
+  footer { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 64px; font-size: 13.5px; color: var(--ink-2); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer a { color: var(--accent); }
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="eyebrow">AI Product Ops &mdash; Research Case Study</div>
+    <h1 class="title">The Buildability Ledger</h1>
+    <p class="subhead">One hundred applications, examined against a single question: can an AI agent use each one today, and if not, what stands in the way. A program did the research. A person checked its claims by hand. What follows is reported as found.</p>
+    <div class="stat-strip">
+<div class="stat-tile"><div class="stat-num">100</div><div class="stat-label">apps researched</div></div>
+<div class="stat-tile"><div class="stat-num">91%</div><div class="stat-label">self&#8209;serve credentials</div></div>
+<div class="stat-tile"><div class="stat-num">OAuth2</div><div class="stat-label">most common auth (61 apps)</div></div>
+<div class="stat-tile"><div class="stat-num">32</div><div class="stat-label">already have an MCP server</div></div>
+<div class="stat-tile stat-tile-accent"><div class="stat-num">88.8%&nbsp;&rarr;&nbsp;96.2%</div><div class="stat-label">verified accuracy, pass 1 &rarr; pass 2</div></div>
+</div>
+  </header>
+
+  <section id="patterns">
+    <h2 class="section-title">The Pattern</h2>
+    <p class="lede">Most of these applications are already within reach. Ninety of the hundred are self&#8209;serve: a developer can obtain working credentials without speaking to anyone at the company. The remaining ten share a common shape &mdash; access comes through a relationship, not a form.</p>
+
+    <div class="pattern-grid">
+      <div>
+        <h3 class="subsection-title">Self&#8209;serve by category</h3>
+        <p style="font-size:14px;color:var(--ink-2);margin-bottom:20px;">Two categories are entirely self&#8209;serve: CRM and Sales, and Developer and Infrastructure platforms. Finance and Marketing carry the most friction.</p>
+        
+    <div class="cat-row">
+      <div class="cat-name">AI, Research and Media-native</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:80%"></div></div>
+      <div class="cat-frac">8/10 self&#8209;serve</div>
+    </div>
+
+    <div class="cat-row">
+      <div class="cat-name">CRM and Sales</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:100%"></div></div>
+      <div class="cat-frac">10/10 self&#8209;serve</div>
+    </div>
+
+    <div class="cat-row">
+      <div class="cat-name">Communications and Messaging</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:90%"></div></div>
+      <div class="cat-frac">9/10 self&#8209;serve</div>
+    </div>
+
+    <div class="cat-row">
+      <div class="cat-name">Data, SEO and Scraping</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:90%"></div></div>
+      <div class="cat-frac">9/10 self&#8209;serve</div>
+    </div>
+
+    <div class="cat-row">
+      <div class="cat-name">Developer, Infra and Data platforms</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:100%"></div></div>
+      <div class="cat-frac">10/10 self&#8209;serve</div>
+    </div>
+
+    <div class="cat-row">
+      <div class="cat-name">Ecommerce</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:90%"></div></div>
+      <div class="cat-frac">9/10 self&#8209;serve</div>
+    </div>
+
+    <div class="cat-row">
+      <div class="cat-name">Finance and Fintech</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:90%"></div></div>
+      <div class="cat-frac">9/10 self&#8209;serve</div>
+    </div>
+
+    <div class="cat-row">
+      <div class="cat-name">Marketing, Ads, Email and Social</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:80%"></div></div>
+      <div class="cat-frac">8/10 self&#8209;serve</div>
+    </div>
+
+    <div class="cat-row">
+      <div class="cat-name">Productivity and Project Management</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:100%"></div></div>
+      <div class="cat-frac">10/10 self&#8209;serve</div>
+    </div>
+
+    <div class="cat-row">
+      <div class="cat-name">Support and Helpdesk</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:90%"></div></div>
+      <div class="cat-frac">9/10 self&#8209;serve</div>
+    </div>
+      </div>
+      <div>
+        <h3 class="subsection-title">Where the gate comes from</h3>
+        <p style="font-size:14px;color:var(--ink-2);margin-bottom:6px;">The ten gated apps give their own reasons for the gate. Read together, the friction falls into three groups:</p>
+        <ul class="gate-list"><li><strong>Contact sales / partnership</strong> &mdash; Pylon, Waterfall.io, PitchBook, Otter AI</li>
+<li><strong>Manual review / approval process</strong> &mdash; WhatsApp Business, Google Ads, Pinterest</li>
+<li><strong>Requires separate paid infrastructure</strong> &mdash; Magento (Adobe Commerce), NotebookLM</li></ul>
+      </div>
+    </div>
+
+    <div class="win-box">
+      <div><div class="num good">91</div><div class="win-label">buildable today,<br>nothing to ask for</div></div>
+      <div><div class="num warn">9</div><div class="win-label">need a conversation<br>before there is anything to build</div></div>
+    </div>
+  </section>
+
+  <section id="findings">
+    <h2 class="section-title">The Findings</h2>
+    <h3 class="subsection-title">All 100 apps</h3>
+    <p style="font-size:14px;color:var(--ink-2);">Every row links to the page it was drawn from. One entry, marked with an asterisk, was corrected after verification &mdash; see below for why.</p>
+    <div class="table-controls">
+      <input type="text" id="search-input" placeholder="Search by name&hellip;">
+      <select id="category-filter"><option value="">All categories</option><option value="CRM and Sales">CRM and Sales</option>
+<option value="Support and Helpdesk">Support and Helpdesk</option>
+<option value="Communications and Messaging">Communications and Messaging</option>
+<option value="Marketing, Ads, Email and Social">Marketing, Ads, Email and Social</option>
+<option value="Ecommerce">Ecommerce</option>
+<option value="Data, SEO and Scraping">Data, SEO and Scraping</option>
+<option value="Developer, Infra and Data platforms">Developer, Infra and Data platforms</option>
+<option value="Productivity and Project Management">Productivity and Project Management</option>
+<option value="Finance and Fintech">Finance and Fintech</option>
+<option value="AI, Research and Media-native">AI, Research and Media-native</option></select>
+      <select id="selfserve-filter">
+        <option value="">Self-serve or gated</option>
+        <option value="yes">Self-serve only</option>
+        <option value="no">Gated only</option>
+      </select>
+    </div>
+    <div class="table-scroll">
+      <table class="findings" id="findings-table">
+        <thead><tr><th>App</th><th>Category</th><th>Auth</th><th>Access</th><th>MCP</th><th>Verdict</th></tr></thead>
+        <tbody>
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_oauth_and_connected_apps.htm" target="_blank" rel="noopener">Salesforce</a><div class="td-desc">Salesforce is the leading AI‑powered CRM platform offering a unified suite of cloud applications for sales, service, marketing, commerce and more.</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="OAuth2|API key|token">
+      <td class="td-name"><a href="https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/overview" target="_blank" rel="noopener">HubSpot</a><div class="td-desc">HubSpot is a smart CRM platform that unifies marketing, sales, service, and content tools with built‑in AI agents.</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="OAuth2|API key">
+      <td class="td-name"><a href="https://developers.pipedrive.com/docs/api/v1/Oauth" target="_blank" rel="noopener">Pipedrive</a><div class="td-desc">Sales CRM &amp; Pipeline Management Software</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="OAuth2|API key|Basic">
+      <td class="td-name"><a href="https://docs.attio.com/rest-api/guides/authentication" target="_blank" rel="noopener">Attio</a><div class="td-desc">Attio is a CRM designed for agentic revenue, providing a unified, context‑rich platform for sales and revenue teams.</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span> <span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="OAuth2|API key">
+      <td class="td-name"><a href="https://docs.twenty.com/developers/extend/api" target="_blank" rel="noopener">Twenty</a><div class="td-desc">Twenty is an open‑source, extensible CRM platform that lets teams build custom CRM data models, UI, and automation, with REST/GraphQL APIs and native AI integration.</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developers.podio.com/authentication" target="_blank" rel="noopener">Podio</a><div class="td-desc">Podio is a flexible work‑management platform that lets teams build custom workspaces, automate workflows, and collaborate in real time.</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://www.zoho.com/crm/developer/docs/api/v8/access-refresh.html" target="_blank" rel="noopener">Zoho CRM</a><div class="td-desc">Zoho CRM is a cloud‑based sales CRM platform that combines AI‑driven automation with customizable modules for managing leads, contacts, deals and more.</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="API key|OAuth2|Basic">
+      <td class="td-name"><a href="https://developer.close.com/topics/authentication" target="_blank" rel="noopener">Close</a><div class="td-desc">Close is a sales CRM that combines calling, email, SMS, pipeline management and an AI sales agent (Chloe) to automate lead qualification and follow‑ups.</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="API key|OAuth2">
+      <td class="td-name"><a href="https://www.developer.copper.com/introduction/authentication.html" target="_blank" rel="noopener">Copper</a><div class="td-desc">Copper is a CRM purpose-built for relationship‑focused businesses to manage the entire customer journey, tightly integrated with Google Workspace.</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="CRM and Sales" data-selfserve="yes" data-auth="OAuth2|API key">
+      <td class="td-name"><a href="https://api.docs.dealcloud.com/docs/token" target="_blank" rel="noopener">DealCloud</a><div class="td-desc">DealCloud is a CRM and sales platform that provides a RESTful API for managing data, schema, users, publications, relationship intelligence imports, and site backups.</div></td>
+      <td class="td-category">CRM and Sales</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="yes" data-auth="OAuth2|API key|Basic">
+      <td class="td-name"><a href="https://developer.zendesk.com/api-reference/introduction/security-and-auth/" target="_blank" rel="noopener">Zendesk</a><div class="td-desc">Zendesk is an AI-first service platform offering customer support, ticketing, and AI agents with a REST API for integration.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span> <span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://developers.intercom.com/docs/build-an-integration/learn-more/authentication" target="_blank" rel="noopener">Intercom</a><div class="td-desc">Intercom is an AI‑powered helpdesk and customer support platform with a native AI agent (Fin) that automates and augments support across channels.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="yes" data-auth="Basic|API key">
+      <td class="td-name"><a href="https://developer.freshdesk.com/api/v1/" target="_blank" rel="noopener">Freshdesk</a><div class="td-desc">Freshdesk is a cloud‑based customer support and helpdesk platform offering a comprehensive REST API for managing tickets, contacts, agents, companies, forums, solutions, time entries, surveys, and more.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">Basic</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://dev.frontapp.com/docs/authentication" target="_blank" rel="noopener">Front</a><div class="td-desc">Front is a customer service platform that unifies teams, conversations, and AI to manage support, sales, and success operations.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="no" data-auth="token">
+      <td class="td-name"><a href="https://docs.usepylon.com/pylon-docs/developer/api/authentication" target="_blank" rel="noopener">Pylon</a><div class="td-desc">An agentic support platform that lets AI agents and humans collaborate to investigate, resolve, and act on customer issues across multiple channels.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-warn">Gated</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://faq.liveagent.com/535002-LiveAgent-API-v1-vs-v3-Authentication-Differences-API-Key-Management-and-Resolving-403-Errors" target="_blank" rel="noopener">LiveAgent</a><div class="td-desc">LiveAgent is an all‑in‑one customer service platform offering live chat, AI chatbot, ticketing, call center and omnichannel support.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://help.plain.com/article/api-quickstart" target="_blank" rel="noopener">Plain</a><div class="td-desc">Plain is an AI‑powered, API‑first support infrastructure that lets B2B teams unify channels, orchestrate AI agents, automate workflows, and extend every part of the platform via a GraphQL API.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developer.helpscout.com/mailbox-api/overview/authentication/" target="_blank" rel="noopener">Help Scout</a><div class="td-desc">Help Scout is an intuitive, affordable customer service platform that centralizes support conversations, AI assistance, and integrations.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="yes" data-auth="API key|OAuth2">
+      <td class="td-name"><a href="https://developers.gorgias.com/reference/authentication" target="_blank" rel="noopener">Gorgias</a><div class="td-desc">Gorgias is a conversational AI platform and helpdesk for ecommerce brands, integrating support tickets with Shopify data and offering AI-driven automation.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Support and Helpdesk" data-selfserve="yes" data-auth="Basic|token">
+      <td class="td-name"><a href="https://developer.gladly.com/rest/index.html" target="_blank" rel="noopener">Gladly</a><div class="td-desc">Gladly is a support and helpdesk platform that provides a unified customer service experience with a REST API for managing agents, customer profiles, timelines, answers, and webhooks.</div></td>
+      <td class="td-category">Support and Helpdesk</td>
+      <td class="td-auth"><span class="badge badge-auth">Basic</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://docs.slack.dev/authentication" target="_blank" rel="noopener">Slack</a><div class="td-desc">Slack is a communications and messaging platform that lets people and AI agents collaborate via channels, huddles, and integrated apps.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="yes" data-auth="Basic|API key">
+      <td class="td-name"><a href="https://www.twilio.com/docs/usage/requests-to-twilio" target="_blank" rel="noopener">Twilio</a><div class="td-desc">Twilio provides Conversational AI and APIs for SMS, email, voice, and other messaging channels.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">Basic</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://www.zoho.com/cliq/help/restapi/v3/introduction/" target="_blank" rel="noopener">Zoho Cliq</a><div class="td-desc">Zoho Cliq is a team communication and messaging platform that provides chat, bots, slash commands, and customizable settings via a RESTful API.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://open.larksuite.com/document/home/introduction-to-scope-and-authorization/access-credentials" target="_blank" rel="noopener">Lark (Larksuite)</a><div class="td-desc">Lark (Larksuite) is a communications and messaging platform that offers a RESTful OpenAPI for accessing contacts, messages, docs, calendars, drives, and other collaboration features.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://pumble.com/help/integrations/automation-workflow-integrations/api-keys-integration/" target="_blank" rel="noopener">Pumble</a><div class="td-desc">Pumble is a free business communication tool offering messaging, channels, video/voice calls, file sharing, and integrations for team collaboration.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="yes" data-auth="OAuth2|token|Basic">
+      <td class="td-name"><a href="https://docs.discord.com/developers/topics/oauth2" target="_blank" rel="noopener">Discord</a><div class="td-desc">Discord is a communications platform for voice, video, and text chat that lets communities and friends connect and collaborate.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span> <span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="yes" data-auth="API key|token">
+      <td class="td-name"><a href="https://core.telegram.org" target="_blank" rel="noopener">Telegram</a><div class="td-desc">Telegram is a communications and messaging platform offering Bot API, MTProto API, TDLib, and Gateway API for developers to build bots, custom clients, and verification services.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="no" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developers.facebook.com/docs/whatsapp/business-management-api/reference/" target="_blank" rel="noopener">WhatsApp Business</a><div class="td-desc">WhatsApp Business Platform provides enterprise‑grade APIs for sending and receiving WhatsApp messages, making calls, and programmatically managing business accounts.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-warn">Gated</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="yes" data-auth="Basic|OAuth2">
+      <td class="td-name"><a href="https://developer.aircall.io/docs/authentication" target="_blank" rel="noopener">Aircall</a><div class="td-desc">Aircall is an AI‑powered cloud phone system that unifies voice calls, SMS and messaging with real‑time coaching, automated workflows and AI agents for customer conversations.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">Basic</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Communications and Messaging" data-selfserve="yes" data-auth="API key|Basic|token">
+      <td class="td-name"><a href="https://developer.vonage.com/en/getting-started/concepts/authentication" target="_blank" rel="noopener">Vonage</a><div class="td-desc">Vonage provides cloud communications APIs for voice, video, messaging, and network features.</div></td>
+      <td class="td-category">Communications and Messaging</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">Basic</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="no" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developers.google.com/google-ads/api/rest/auth" target="_blank" rel="noopener">Google Ads</a><div class="td-desc">Create and manage ads that reach users on Google Search, Display, YouTube and more via the Google Ads API.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-warn">Gated</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developers.facebook.com/docs/marketing-api/get-started/authentication/" target="_blank" rel="noopener">Meta Ads</a><div class="td-desc">Meta Ads (Marketing API) provides Graph API endpoints to create, manage, and analyze ad campaigns across Facebook, Instagram, Messenger, and WhatsApp.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads/getting-started?view=li-lms-2026-01" target="_blank" rel="noopener">LinkedIn Ads</a><div class="td-desc">LinkedIn Ads API lets developers programmatically create and manage LinkedIn advertising campaigns, targeting, reporting, lead sync, and related marketing features.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="yes" data-auth="OAuth2|API key">
+      <td class="td-name"><a href="https://github.com/gohighlevel/highlevel-api-sdk" target="_blank" rel="noopener">GoHighLevel</a><div class="td-desc">GoHighLevel is a marketing automation platform offering CRM, email, SMS, funnel and other marketing tools, with a public API for programmatic access.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="yes" data-auth="OAuth2|API key|Basic">
+      <td class="td-name"><a href="https://mailchimp.com/developer/marketing/docs/fundamentals/" target="_blank" rel="noopener">Mailchimp</a><div class="td-desc">Mailchimp provides Marketing and Transactional APIs for programmatic email, SMS, and e‑commerce integration, enabling developers to manage audiences, campaigns, and transactional messaging.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span> <span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="yes" data-auth="API key|OAuth2">
+      <td class="td-name"><a href="https://developers.klaviyo.com/en/v2025-04-15/docs/authenticate_" target="_blank" rel="noopener">Klaviyo</a><div class="td-desc">Klaviyo provides APIs to build personalized marketing experiences, enabling integration of data, events, profiles, and campaigns for email and social marketing.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://developer.systeme.io/reference/api" target="_blank" rel="noopener">systeme.io</a><div class="td-desc">Systeme.io is an all‑in‑one platform for building sales funnels, email marketing, online courses, and more to launch and grow an online business.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="no" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developers.pinterest.com/docs/getting-started/authentication/" target="_blank" rel="noopener">Pinterest</a><div class="td-desc">Pinterest API lets developers integrate with Pinterest to manage organic content, ads, product catalogs, conversion tracking, and analytics.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-warn">Gated</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developers.facebook.com/docs/threads/get-started/get-access-tokens-and-permissions/" target="_blank" rel="noopener">Threads (Meta)</a><div class="td-desc">The Threads API lets developers create and publish posts, retrieve media and profiles, moderate replies, and access insights on Meta&#x27;s Threads platform.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Marketing, Ads, Email and Social" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://www.twilio.com/docs/sendgrid/api-reference/how-to-use-the-sendgrid-v3-api/authentication" target="_blank" rel="noopener">SendGrid</a><div class="td-desc">SendGrid provides email API and marketing campaign tools for sending transactional and marketing emails at scale.</div></td>
+      <td class="td-category">Marketing, Ads, Email and Social</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://shopify.dev/docs/api/usage/authentication" target="_blank" rel="noopener">Shopify</a><div class="td-desc">Shopify is an ecommerce platform that lets developers build apps, themes, and headless storefronts to extend the admin, online store, checkout, and more.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="yes" data-auth="API key|Basic|other">
+      <td class="td-name"><a href="https://developer.woocommerce.com/docs/apis/rest-api/authentication/" target="_blank" rel="noopener">WooCommerce</a><div class="td-desc">The WooCommerce REST API provides a powerful way to connect your WooCommerce store to external systems via a full-featured JSON API.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">Basic</span> <span class="badge badge-auth">other</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://docs.bigcommerce.com/developer/docs/overview/api-fundamentals/api-accounts" target="_blank" rel="noopener">BigCommerce</a><div class="td-desc">BigCommerce is a SaaS ecommerce platform offering REST and GraphQL APIs for managing store data, building storefronts, and creating integrations.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developer.salesforce.com/docs/commerce/b2c-commerce/guide/scapi-get-started.html" target="_blank" rel="noopener">Salesforce Commerce Cloud</a><div class="td-desc">Salesforce Commerce Cloud (B2C Commerce) offers RESTful SCAPI APIs for building storefronts, merchant tools, and integrations on the B2C Commerce platform.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="no" data-auth="token|Basic|other">
+      <td class="td-name"><a href="https://developer.adobe.com/commerce/webapi/get-started/authentication/" target="_blank" rel="noopener">Magento (Adobe Commerce)</a><div class="td-desc">Adobe Commerce (Magento) is an API‑first e‑commerce platform offering extensive REST (and GraphQL) APIs for managing catalog, orders, customers, carts, payments, shipping, and integrations.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">token</span> <span class="badge badge-auth">Basic</span> <span class="badge badge-auth">other</span></td>
+      <td class="td-selfserve"><span class="badge badge-warn">Gated</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="yes" data-auth="API key|OAuth2">
+      <td class="td-name"><a href="https://developers.squarespace.com/commerce-apis/authentication-and-permissions" target="_blank" rel="noopener">Squarespace</a><div class="td-desc">Squarespace is a website and ecommerce platform that provides REST Commerce APIs, Reseller APIs, custom code specs, and webhooks for building integrations, managing storefront data, and extending sites.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://docs.ecwid.com/get-started/make-your-first-api-request" target="_blank" rel="noopener">Ecwid</a><div class="td-desc">Ecwid is an ecommerce platform that offers a REST API and JavaScript storefront API for managing store data, orders, products, customers, categories, discounts, payments, shipping, and webhooks.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://gumroad.com/api" target="_blank" rel="noopener">Gumroad</a><div class="td-desc">Gumroad offers an OAuth 2.0 REST API for managing products, sales, payouts, tax data, user profiles, and related ecommerce operations.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developer-docs.amazon.com/sp-api/docs/onboarding-step-6-set-up-the-authorization-workflow" target="_blank" rel="noopener">Amazon Selling Partner</a><div class="td-desc">Amazon Selling Partner API (SP-API) provides programmatic, RESTful access to Amazon marketplace data and operations for sellers and vendors, including orders, listings, inventory, fulfillment, feeds, reports, pricing, product information, notifications, and more.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Ecommerce" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://github.com/subtain-haider/laravel-payments/blob/main/docs/gateways/fanbasis.md" target="_blank" rel="noopener">fanbasis</a><div class="td-desc">An all-in-one platform for creators to build funnels, courses, communities, and checkout experiences with built‑in payments.</div></td>
+      <td class="td-category">Ecommerce</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="yes" data-auth="Basic">
+      <td class="td-name"><a href="https://docs.dataforseo.com/v3/auth/" target="_blank" rel="noopener">DataForSEO</a><div class="td-desc">DataForSEO provides a REST API for accessing comprehensive SEO data for software, analytics pipelines, and automations.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"><span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="yes" data-auth="API key|token">
+      <td class="td-name"><a href="https://seranking.com/api/data/getting-started/" target="_blank" rel="noopener">SE Ranking</a><div class="td-desc">SE Ranking offers a Data API that lets you pull large volumes of SEO and marketing data such as backlinks, keywords, domain information, AI search results, and site audit reports.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="yes" data-auth="API key|OAuth2">
+      <td class="td-name"><a href="https://docs.ahrefs.com/llms.txt" target="_blank" rel="noopener">Ahrefs</a><div class="td-desc">Access Ahrefs marketing and search data through REST APIs and developer tools to build custom integrations, workflows, and AI‑enhanced applications.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://docs.mrscraper.com/docs/api/authentication" target="_blank" rel="noopener">MrScraper</a><div class="td-desc">MrScraper is an AI‑powered web scraping platform that provides REST APIs, agents, SDKs and an MCP server to programmatically extract structured data from websites.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="yes" data-auth="token">
+      <td class="td-name"><a href="https://docs.apify.com/api/v2" target="_blank" rel="noopener">Apify</a><div class="td-desc">Apify is a platform and marketplace for AI-powered web scraping and automation, offering Actors that can be run and managed via a comprehensive REST API.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"><span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://docs.firecrawl.dev/v0/api-reference/introduction" target="_blank" rel="noopener">Firecrawl</a><div class="td-desc">Firecrawl provides a context API to search, scrape, and interact with the web at scale, delivering clean, LLM‑ready data.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="yes" data-auth="API key|Basic">
+      <td class="td-name"><a href="https://docs.brightdata.com/api-reference/authentication" target="_blank" rel="noopener">Bright Data</a><div class="td-desc">World’s #1 web data infrastructure for humans and AI agents to search, crawl, extract and act across the public web.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="yes" data-auth="">
+      <td class="td-name"><a href="https://github.com/sherlock-project/sherlock" target="_blank" rel="noopener">Sherlock</a><div class="td-desc">A command‑line tool that searches for a given username across hundreds of social‑media sites.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="no" data-auth="API key">
+      <td class="td-name"><a href="https://docs.waterfall.io/v1/introduction" target="_blank" rel="noopener">Waterfall.io</a><div class="td-desc">Waterfall provides a B2B data platform with APIs to find, enrich, verify, and track contacts and companies for GTM and revenue teams.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-warn">Gated</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Data, SEO and Scraping" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://developers.clay.com/public-api/authentication" target="_blank" rel="noopener">Clay</a><div class="td-desc">Clay is a data infrastructure platform for GTM teams that offers AI agents, orchestration workflows, and execution tools, accessible via a public REST API and a coding‑agent plugin.</div></td>
+      <td class="td-category">Data, SEO and Scraping</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="token|Basic|OAuth2">
+      <td class="td-name"><a href="https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2026-03-10" target="_blank" rel="noopener">GitHub</a><div class="td-desc">GitHub&#x27;s REST API lets developers create integrations, retrieve data, and automate workflows across repositories, issues, pull requests, actions, and many other GitHub features.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">token</span> <span class="badge badge-auth">Basic</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="token">
+      <td class="td-name"><a href="https://vercel.com/docs/rest-api/getting-started" target="_blank" rel="noopener">Vercel</a><div class="td-desc">Vercel provides a developer‑focused platform for deploying and managing frontend projects with high performance and a rich REST API for infra operations.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://docs.netlify.com/api" target="_blank" rel="noopener">Netlify</a><div class="td-desc">Netlify provides a REST API for managing site deployments, DNS, forms, JavaScript snippets, and other infrastructure features.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="API key|token">
+      <td class="td-name"><a href="https://developers.cloudflare.com/fundamentals/api/get-started/" target="_blank" rel="noopener">Cloudflare</a><div class="td-desc">The Cloudflare API provides programmatic access to Cloudflare&#x27;s wide range of products and services—including account management, DNS, networking, security, workers, storage, and analytics—via a RESTful interface.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://supabase.com/docs/guides/auth" target="_blank" rel="noopener">Supabase</a><div class="td-desc">Supabase is an open-source developer platform offering a hosted Postgres database with realtime, authentication, storage, edge functions, auto-generated REST and GraphQL APIs, and client libraries for multiple languages.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="Basic|token">
+      <td class="td-name"><a href="https://neo4j.com/docs/http-api/current/authentication-authorization/" target="_blank" rel="noopener">Neo4j</a><div class="td-desc">Neo4j is a graph database platform that provides an HTTP Query API for executing Cypher queries over REST.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">Basic</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="OAuth2|token|other">
+      <td class="td-name"><a href="https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/authentication" target="_blank" rel="noopener">Snowflake</a><div class="td-desc">Snowflake is a cloud data platform that provides data warehousing, analytics, and data sharing capabilities.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span> <span class="badge badge-auth">other</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="OAuth2|API key">
+      <td class="td-name"><a href="https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2.md" target="_blank" rel="noopener">MongoDB Atlas</a><div class="td-desc">MongoDB Atlas Administration API provides RESTful programmatic access to manage Atlas projects, clusters, users, backups, alerts, and other infrastructure resources.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://docs.datadoghq.com/api" target="_blank" rel="noopener">Datadog</a><div class="td-desc">Datadog offers a comprehensive HTTP REST API for programmatic access to its monitoring and observability platform, covering metrics, logs, traces, dashboards, monitors, and more.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Developer, Infra and Data platforms" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://docs.sentry.dev/api/auth/" target="_blank" rel="noopener">Sentry</a><div class="td-desc">Sentry provides a web API for programmatically managing organizations, teams, projects, events, alerts, releases, and other monitoring data on its error tracking and performance platform.</div></td>
+      <td class="td-category">Developer, Infra and Data platforms</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="OAuth2|API key">
+      <td class="td-name"><a href="https://developers.notion.com/reference/authentication" target="_blank" rel="noopener">Notion</a><div class="td-desc">Notion provides a REST API and SDKs to read, create, and update pages, databases, comments, users, and more, with three authentication models (internal token, public OAuth, and personal access tokens).</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://airtable.com/developers/web/api/authentication" target="_blank" rel="noopener">Airtable</a><div class="td-desc">Airtable provides a flexible, relational spreadsheet-database platform for organizing, automating, and collaborating on data, usable via AI agents and APIs.</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="OAuth2|API key">
+      <td class="td-name"><a href="https://linear.app/developers/graphql" target="_blank" rel="noopener">Linear</a><div class="td-desc">Linear is a project management and issue tracking platform that provides a GraphQL API for querying and mutating data such as issues, teams, users, and workflow states.</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="OAuth2|Basic|token">
+      <td class="td-name"><a href="https://developer.atlassian.com/cloud/jira/software/rest/intro/" target="_blank" rel="noopener">Jira</a><div class="td-desc">Jira is an Atlassian project management platform offering a REST API for programmatic access to issues, projects, agile boards, and related data.</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">Basic</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://developers.asana.com/docs/authentication" target="_blank" rel="noopener">Asana</a><div class="td-desc">Integrate tools, automate actions, and customize your workflows with Asana’s developer platform.</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="API key|OAuth2">
+      <td class="td-name"><a href="https://developer.monday.com/api-reference/docs/authentication" target="_blank" rel="noopener">Monday.com</a><div class="td-desc">Monday.com is a work operating system that provides a GraphQL API, real‑time webhooks, and a native Model Context Protocol (MCP) server for building AI agents and custom integrations.</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="API key|OAuth2">
+      <td class="td-name"><a href="https://developer.clickup.com/docs/authentication" target="_blank" rel="noopener">ClickUp</a><div class="td-desc">ClickUp is a productivity and project management platform offering a public REST API for building integrations and AI assistants.</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="token|API key|Basic">
+      <td class="td-name"><a href="https://coda.io/packs/build/latest/guides/basics/authentication/" target="_blank" rel="noopener">Coda</a><div class="td-desc">Coda (Superhuman Docs) provides a RESTful API to list, create, read, update, and delete docs, pages, tables, rows, formulas, controls, and analytics.</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">token</span> <span class="badge badge-auth">API key</span> <span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="OAuth2|API key">
+      <td class="td-name"><a href="https://developers.smartsheet.com/api/smartsheet/guides/basics/authentication" target="_blank" rel="noopener">Smartsheet</a><div class="td-desc">Smartsheet is a cloud‑based work management platform that lets users create, share, and automate sheets, reports, dashboards, and other collaborative resources.</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Productivity and Project Management" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://help.getharvest.com/api-v2/authentication-api/authentication/authentication/" target="_blank" rel="noopener">Harvest</a><div class="td-desc">Harvest is a time‑tracking and invoicing SaaS that lets teams log hours, manage projects, expenses, and generate invoices.</div></td>
+      <td class="td-category">Productivity and Project Management</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="yes" data-auth="API key|Basic" data-corrected="1">
+      <td class="td-name"><a href="https://docs.stripe.com/api/authentication?api-version=2025-08-27.basil" target="_blank" rel="noopener">Stripe</a> <span class="corrected-mark" title="Corrected via hand verification - see Verification section">*</span><div class="td-desc">Stripe API provides a RESTful interface for payments and financial operations, using API keys for authentication and returning JSON responses.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://plaid.com/docs/api/" target="_blank" rel="noopener">Plaid</a><div class="td-desc">Plaid offers a suite of RESTful APIs that let developers access users&#x27; bank account data, balances, transactions, identity verification, payments, transfers, investments, liabilities, credit, income, and more.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md" target="_blank" rel="noopener">Binance</a><div class="td-desc">Binance provides REST and WebSocket APIs for cryptocurrency market data, trading, and account management on its exchange platform.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://docs.nmi.com/reference/nmi-gateway-features" target="_blank" rel="noopener">Paygent Connect</a><div class="td-desc">Paygent Connect is a white‑label, embedded payment gateway powered by NMI, offering a full‑featured v4 JSON API for payment processing, merchant onboarding, reporting, and settings management.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="yes" data-auth="token">
+      <td class="td-name"><a href="https://www.ipayx.ai/docs/mcp-server" target="_blank" rel="noopener">iPayX</a><div class="td-desc">iPayX provides a FINTRAC‑registered forensic FX audit platform that scores foreign‑exchange transactions against live mid‑market rates via an MCP‑compatible API.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="yes" data-auth="OAuth2">
+      <td class="td-name"><a href="https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/oauth-2.0" target="_blank" rel="noopener">QuickBooks</a><div class="td-desc">QuickBooks Online provides a RESTful accounting API for accessing and managing financial data such as invoices, payments, customers, and reports.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="yes" data-auth="OAuth2|other">
+      <td class="td-name"><a href="https://developer.xero.com/faq" target="_blank" rel="noopener">Xero</a><div class="td-desc">Xero is a cloud‑based accounting and finance platform that provides APIs for integrating accounting, invoicing, payroll, and other financial data.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">other</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://developer.brex.com/guides/authentication" target="_blank" rel="noopener">Brex</a><div class="td-desc">Brex provides a unified spend platform with corporate cards, expense management, reimbursements, travel, and bill pay, offering a RESTful JSON API for building internal finance tools and custom workflows.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="yes" data-auth="OAuth2|Basic">
+      <td class="td-name"><a href="https://docs.ramp.com/llms-guides/authorization.txt" target="_blank" rel="noopener">Ramp</a><div class="td-desc">Ramp is a spend management platform offering APIs for cards, bills, reimbursements, custom records, and webhooks, enabling automated financial workflows and AI agent integration.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">Basic</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="Finance and Fintech" data-selfserve="no" data-auth="API key|token">
+      <td class="td-name"><a href="https://pitchbook.com/help/PitchBook-api" target="_blank" rel="noopener">PitchBook</a><div class="td-desc">PitchBook offers a RESTful API that provides private market financial data—including financing details, deal information, and AI‑powered insights—for integration into internal business systems.</div></td>
+      <td class="td-category">Finance and Fintech</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-warn">Gated</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="no" data-auth="OAuth2">
+      <td class="td-name"><a href="https://docs.cloud.google.com/gemini/enterprise/notebooklm-enterprise/docs/api-notebooks" target="_blank" rel="noopener">NotebookLM</a><div class="td-desc">NotebookLM (Gemini Notebook Enterprise) is a Google Cloud service that lets users create, manage, and share AI‑enhanced notebooks for generating insights and summaries from documents.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-warn">Gated</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="no" data-auth="API key|OAuth2">
+      <td class="td-name"><a href="https://help.otter.ai/hc/en-us/articles/36130822688279-Otter-ai-Public-API" target="_blank" rel="noopener">Otter AI</a><div class="td-desc">Otter AI provides a public API and an MCP server to programmatically access transcripts, channels, conversations, and insights from Enterprise workspaces.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span></td>
+      <td class="td-selfserve"><span class="badge badge-warn">Gated</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="yes" data-auth="API key|OAuth2|token">
+      <td class="td-name"><a href="https://developers.fathom.ai/sdks/authentication" target="_blank" rel="noopener">Fathom</a><div class="td-desc">Fathom is an AI-powered meeting notetaker that automatically captures transcripts, summaries, action items and syncs insights to collaboration tools.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span> <span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="yes" data-auth="OAuth2|API key">
+      <td class="td-name"><a href="https://docs.consensus.app/docs/mcp" target="_blank" rel="noopener">Consensus</a><div class="td-desc">Consensus is an AI academic search engine for peer-reviewed literature—your research OS for finding, organizing, and analyzing science 10x faster.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://docs.reducto.ai/quickstart" target="_blank" rel="noopener">Reducto</a><div class="td-desc">Agentic document platform offering parsing, classification, extraction, and editing via flexible APIs for AI teams.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://docs.devin.ai/api-reference/authentication" target="_blank" rel="noopener">Devin</a><div class="td-desc">Devin is an autonomous AI software engineer that can write, run, and test code to help ambitious engineering teams.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://docs.higgsfield.ai/docs" target="_blank" rel="noopener">higgsfield</a><div class="td-desc">Higgsfield provides an asynchronous API and MCP server for generating images, videos, audio, and 3D content using 30+ generative models.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="yes" data-auth="">
+      <td class="td-name"><a href="https://github.com/mermaid-js/mermaid-cli" target="_blank" rel="noopener">Mermaid CLI</a><div class="td-desc">A command-line tool that converts Mermaid diagram definitions into SVG, PNG, or PDF files.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="yes" data-auth="API key">
+      <td class="td-name"><a href="https://transcriptapi.com" target="_blank" rel="noopener">YouTube Transcript</a><div class="td-desc">REST API and MCP for extracting YouTube video transcripts, searching videos, browsing channels, and extracting playlists at scale.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"><span class="badge badge-auth">API key</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr>
+
+    <tr class="find-row" data-category="AI, Research and Media-native" data-selfserve="yes" data-auth="OAuth2|token">
+      <td class="td-name"><a href="https://developers.grain.com/" target="_blank" rel="noopener">Grain</a><div class="td-desc">Grain is an AI-powered notetaker that captures, enriches, and exports meeting transcripts for teams and AI agents.</div></td>
+      <td class="td-category">AI, Research and Media-native</td>
+      <td class="td-auth"><span class="badge badge-auth">OAuth2</span> <span class="badge badge-auth">token</span></td>
+      <td class="td-selfserve"><span class="badge badge-good">Self-serve</span></td>
+      <td class="td-surface"><span class="badge badge-mcp">MCP</span></td>
+      <td class="td-verdict"><span class="badge badge-good">200 Buildable</span></td>
+    </tr></tbody>
+      </table>
+    </div>
+    <p id="empty-state" style="display:none;color:var(--ink-2);font-style:italic;margin-top:12px;">No apps match that filter.</p>
+  </section>
+
+  <section id="agent">
+    <h2 class="section-title">What Was Built</h2>
+    <p class="lede">A Python program produced the hundred rows above, not a person. For each app, it searched for documentation, fetched the actual pages, and asked a language model to read them and answer the four questions the brief poses. Composio's own tools did the searching and fetching &mdash; nothing here was typed from memory.</p>
+
+    <figure class="diagram-wrap">
+      <svg viewBox="0 0 920 300" role="img" aria-label="Pipeline diagram: for each app, search the web and fetch the hinted URL, feed both into an LLM extraction step, validate the JSON, retry once on failure, and either write the result or flag it for a human.">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+          </marker>
+        </defs>
+        <!-- boxes -->
+        <g font-family="IBM Plex Mono, monospace" font-size="12">
+          <rect x="10" y="120" width="120" height="56" rx="3" fill="none" stroke="currentColor"></rect>
+          <text x="70" y="144" text-anchor="middle">100 apps</text>
+          <text x="70" y="160" text-anchor="middle" fill="currentColor" opacity="0.6" font-size="10">apps.json</text>
+
+          <rect x="190" y="120" width="130" height="56" rx="3" fill="none" stroke="currentColor"></rect>
+          <text x="255" y="144" text-anchor="middle">Search</text>
+          <text x="255" y="160" text-anchor="middle" opacity="0.6" font-size="9.5">COMPOSIO_SEARCH_WEB</text>
+
+          <rect x="380" y="120" width="150" height="56" rx="3" fill="none" stroke="currentColor"></rect>
+          <text x="455" y="140" text-anchor="middle">Fetch</text>
+          <text x="455" y="156" text-anchor="middle" opacity="0.6" font-size="9.5">up to 3 pages,</text>
+          <text x="455" y="168" text-anchor="middle" opacity="0.6" font-size="9.5">hint URL first</text>
+
+          <rect x="590" y="120" width="130" height="56" rx="3" fill="none" stroke="currentColor"></rect>
+          <text x="655" y="144" text-anchor="middle">Extract</text>
+          <text x="655" y="160" text-anchor="middle" opacity="0.6" font-size="9.5">Groq LLM &rarr; JSON</text>
+
+          <rect x="760" y="10" width="150" height="50" rx="3" fill="none" stroke="var(--good)"></rect>
+          <text x="835" y="30" text-anchor="middle" fill="var(--good)">pass2.json</text>
+          <text x="835" y="45" text-anchor="middle" fill="var(--good)" opacity="0.75" font-size="9.5">100/100 apps</text>
+
+          <rect x="760" y="200" width="150" height="60" rx="3" fill="none" stroke="var(--flag)"></rect>
+          <text x="835" y="222" text-anchor="middle" fill="var(--flag)">needs_human</text>
+          <text x="835" y="237" text-anchor="middle" fill="var(--flag)" opacity="0.8" font-size="9">still invalid after</text>
+          <text x="835" y="249" text-anchor="middle" fill="var(--flag)" opacity="0.8" font-size="9">one retry</text>
+        </g>
+        <!-- arrows -->
+        <g stroke="currentColor" fill="none" stroke-width="1.3">
+          <line x1="130" y1="148" x2="188" y2="148" marker-end="url(#arrow)"></line>
+          <line x1="320" y1="148" x2="378" y2="148" marker-end="url(#arrow)"></line>
+          <line x1="530" y1="148" x2="588" y2="148" marker-end="url(#arrow)"></line>
+          <path d="M720,135 C742,110 742,55 758,38" marker-end="url(#arrow)"></path>
+          <path d="M720,160 C742,185 742,225 758,228" stroke="var(--flag)" marker-end="url(#arrow)"></path>
+          <path d="M700,118 C680,90 640,80 620,105" marker-end="url(#arrow)"></path>
+        </g>
+        <text x="740" y="70" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="currentColor" opacity="0.7">valid JSON</text>
+        <text x="742" y="196" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="var(--flag)">still invalid</text>
+        <text x="600" y="88" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="currentColor" opacity="0.7">retry once, with correction</text>
+      </svg>
+      <figcaption>The extraction step validates its own JSON output and, on failure, is given one corrected retry before an app is set aside for a person to look at. In the final run, every app produced valid output &mdash; one (Otter AI) only on the second attempt.</figcaption>
+    </figure>
+
+    <h3 class="subsection-title">Where it was wrong, and what was done about it</h3>
+    <p style="font-size:14.5px;color:var(--ink-2);">Six real problems came up while building this. None were staged for the write&#8209;up; each is recorded here as it happened.</p>
+    <div class="bug-log"><div class="bug-item"><div class="bug-title">A model no longer served</div><div class="bug-body">Composio's own documentation lists <code>llama-3.3-70b-versatile</code> as an example model. It returned HTTP 404 (<code>model_not_found</code>) on Groq's live backend — the model has since been retired. Replaced it with <code>openai/gpt-oss-120b</code>.</div></div>
+<div class="bug-item"><div class="bug-title">“MCP” misread</div><div class="bug-body">The extraction model first read MCP as “Managed Connectivity Platform,” not Model Context Protocol. Corrected by defining the term in the prompt itself.</div></div>
+<div class="bug-item"><div class="bug-title">A search that missed its own hint</div><div class="bug-body">Otter AI's own hint names an MCP server, but a query built from the app's name alone never found the page that would confirm or deny it, so the first pass reported none. Fixed by folding the hint's own text into the search query.</div></div>
+<div class="bug-item"><div class="bug-title">Two names, wrong products</div><div class="bug-body">Searching “Sherlock” and “Mermaid CLI” by name returned unrelated products that happen to share the name — Ansys Sherlock, an unrelated Rust crate — instead of the tools the assignment actually meant. Fixed by fetching the hint's own URL directly, rather than trusting search to pick the right one.</div></div>
+<div class="bug-item"><div class="bug-title">A results file overwritten</div><div class="bug-body">A targeted re-run of three apps, made to test the fix above, silently overwrote a completed hundred-app results file instead of merging into it. The writer was fixed to merge by app ID. The data lost to this was reconstructed under a documented, explicitly labeled naive-mode flag, so the before-and-after comparison later in this report is not invented.</div></div>
+<div class="bug-item"><div class="bug-title">One extraction that failed, then didn&#x27;t</div><div class="bug-body">Otter AI's JSON response was cut off mid-string on the first attempt — Groq's output is not fully deterministic. It succeeded on a second attempt. Kept here rather than removed: this is a real property of extraction at this scale, not an exception to it.</div></div></div>
+  </section>
+
+  <section id="verification">
+    <h2 class="section-title">Verification</h2>
+    <p class="lede">Twenty applications &mdash; two from each of the ten categories &mdash; were chosen before any result was read, so the sample could not be shaped by what it would go on to show. Each was checked by hand against real developer documentation, across four dimensions: auth method, self&#8209;serve status, API surface, and buildability. Eighty checks in total.</p>
+
+    <div class="verify-headline">
+      <div><div class="verify-num" style="color:var(--warn)">88.8%</div><div style="font-size:13px;color:var(--ink-2)">first pass &middot; 71/80 correct</div></div>
+      <div class="verify-arrow">&rarr;</div>
+      <div><div class="verify-num" style="color:var(--good)">96.2%</div><div style="font-size:13px;color:var(--ink-2)">after the fixes below &middot; 77/80 correct</div></div>
+    </div>
+
+    <table class="dims">
+      <thead><tr><th>Dimension</th><th>Pass 1</th><th>Pass 2</th></tr></thead>
+      <tbody>
+    <tr>
+      <td>Auth method</td>
+      <td class="num">18/20 &nbsp;(90.0%)</td>
+      <td class="num">20/20 &nbsp;(100.0%)</td>
+    </tr>
+
+    <tr>
+      <td>Self-serve status</td>
+      <td class="num">17/20 &nbsp;(85.0%)</td>
+      <td class="num">19/20 &nbsp;(95.0%)</td>
+    </tr>
+
+    <tr>
+      <td>API surface / MCP</td>
+      <td class="num">17/20 &nbsp;(85.0%)</td>
+      <td class="num">20/20 &nbsp;(100.0%)</td>
+    </tr>
+
+    <tr>
+      <td>Buildability verdict</td>
+      <td class="num">19/20 &nbsp;(95.0%)</td>
+      <td class="num">18/20 &nbsp;(90.0%)</td>
+    </tr></tbody>
+    </table>
+
+    <h3 class="subsection-title">What pass one got wrong</h3>
+    <ul class="miss-list">
+        <li class="miss-item">
+          <div class="miss-head"><strong>Pylon</strong> &middot; Self-serve status</div>
+          <div class="miss-body">Said: <code>{&quot;self_serve&quot;: true, &quot;gating_reason&quot;: null}</code></div>
+          <div class="miss-body">Reality: Gated - usepylon.com&#x27;s own homepage is a &#x27;Book a Demo&#x27; form with no self-serve signup or pricing page found.</div>
+          <div class="miss-evidence"><a href="https://usepylon.com" target="_blank" rel="noopener">https://usepylon.com</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Pylon</strong> &middot; API surface / MCP</div>
+          <div class="miss-body">Said: <code>{&quot;summary&quot;: &quot;The Pylon API provides endpoints for managing accounts, activities, files, highlights, attachments, audit logs, call recordings, contacts, custom fields, custom objects, issues, feature requests, knowledge base, macros, user profile (me), messages, surveys, tags, tasks &amp; projects, teams, ticket forms, training data, user roles, users, external IDs, custom apps, embedded iframes, and webhooks.&quot;, &quot;mcp_exists&quot;: false}</code></div>
+          <div class="miss-body">Reality: REST API (Bearer token) with a documented but narrow public surface (e.g. /me); a real, official MCP server exists at docs.usepylon.com/pylon-docs/integrations/pylon-mcp.</div>
+          <div class="miss-evidence"><a href="https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp" target="_blank" rel="noopener">https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Pylon</strong> &middot; Buildability verdict</div>
+          <div class="miss-body">Said: <code>{&quot;buildable_today&quot;: true, &quot;blocker&quot;: null}</code></div>
+          <div class="miss-body">Reality: Technically buildable (real, working API), but the gate (sales demo required for dashboard/token access) is the actual practical blocker and should appear in the blocker field.</div>
+          <div class="miss-evidence"><a href="https://usepylon.com" target="_blank" rel="noopener">https://usepylon.com</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Meta Ads</strong> &middot; Self-serve status</div>
+          <div class="miss-body">Said: <code>{&quot;self_serve&quot;: false, &quot;gating_reason&quot;: &quot;Access to many ad\u2011related permissions requires Business verification and App Review (Advanced Access) before production use.&quot;}</code></div>
+          <div class="miss-body">Reality: Standard Access tier is self-serve (no App Review needed for a developer&#x27;s own ad account); Advanced Access (production, other users&#x27; accounts) requires Meta App Review + Business Verification.</div>
+          <div class="miss-evidence"><a href="https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/" target="_blank" rel="noopener">https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Vercel</strong> &middot; Auth method</div>
+          <div class="miss-body">Said: <code>[&quot;OAuth2&quot;, &quot;token&quot;, &quot;Basic&quot;]</code></div>
+          <div class="miss-body">Reality: Bearer access tokens only. Docs: &#x27;Vercel Access Tokens are required... Authorization: Bearer &lt;TOKEN&gt;.&#x27; No Basic auth found; OAuth2 exists only for the separate Integrations/Marketplace flow, not the primary REST API.</div>
+          <div class="miss-evidence"><a href="https://vercel.com/docs/rest-api" target="_blank" rel="noopener">https://vercel.com/docs/rest-api</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Smartsheet</strong> &middot; API surface / MCP</div>
+          <div class="miss-body">Said: <code>{&quot;summary&quot;: &quot;The Smartsheet API offers RESTful endpoints to create, read, update, and delete sheets, rows, columns, workspaces, users, groups, reports, sights (dashboards), and webhooks, as well as to manage access scopes and retrieve current user information.&quot;, &quot;mcp_exists&quot;: false}</code></div>
+          <div class="miss-body">Reality: Comprehensive REST API; official, GA MCP server confirmed at developers.smartsheet.com/ai-mcp/smartsheet/mcp-server.</div>
+          <div class="miss-evidence"><a href="https://developers.smartsheet.com/ai-mcp/smartsheet/mcp-server" target="_blank" rel="noopener">https://developers.smartsheet.com/ai-mcp/smartsheet/mcp-server</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Stripe</strong> &middot; Auth method</div>
+          <div class="miss-body">Said: <code>[&quot;API key&quot;, &quot;Basic&quot;, &quot;token&quot;]</code></div>
+          <div class="miss-body">Reality: Secret API key sent via HTTP Basic Auth (key as username, blank password). No separate &#x27;token&#x27; concept beyond the key itself.</div>
+          <div class="miss-evidence"><a href="https://stripe.com/docs/api/authentication" target="_blank" rel="noopener">https://stripe.com/docs/api/authentication</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Stripe</strong> &middot; Self-serve status</div>
+          <div class="miss-body">Said: <code>{&quot;self_serve&quot;: false, &quot;gating_reason&quot;: null}</code></div>
+          <div class="miss-body">Reality: Self-serve: dashboard.stripe.com/register is a plain signup form (email+password, no approval), and test-mode API keys are available immediately after signup.</div>
+          <div class="miss-evidence"><a href="https://dashboard.stripe.com/register" target="_blank" rel="noopener">https://dashboard.stripe.com/register</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Stripe</strong> &middot; API surface / MCP</div>
+          <div class="miss-body">Said: <code>{&quot;summary&quot;: &quot;Not described in provided sources.&quot;, &quot;mcp_exists&quot;: false}</code></div>
+          <div class="miss-body">Reality: REST API, resource-oriented URLs, JSON responses, standard HTTP verbs - extremely well documented.</div>
+          <div class="miss-evidence"><a href="https://stripe.com/docs/api" target="_blank" rel="noopener">https://stripe.com/docs/api</a></div>
+        </li></ul>
+
+    <h3 class="subsection-title" style="margin-top:32px;">What survived the fix</h3>
+    <p style="font-size:14.5px;color:var(--ink-2);">Three mistakes survived the correction. One of them &mdash; Stripe &mdash; was wrong in both passes, in the same direction, for the same reason: the extraction never checked the plainest evidence available, the signup page itself. It is left here rather than quietly repaired.</p>
+    <ul class="miss-list">
+        <li class="miss-item">
+          <div class="miss-head"><strong>Pylon</strong> &middot; Buildability verdict</div>
+          <div class="miss-body">Said: <code>{&quot;buildable_today&quot;: true, &quot;blocker&quot;: null}</code></div>
+          <div class="miss-body">Reality: Technically buildable (real, working API), but the gate (sales demo required for dashboard/token access) is the actual practical blocker and should appear in the blocker field.</div>
+          <div class="miss-evidence"><a href="https://usepylon.com" target="_blank" rel="noopener">https://usepylon.com</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Meta Ads</strong> &middot; Buildability verdict</div>
+          <div class="miss-body">Said: <code>{&quot;buildable_today&quot;: true, &quot;blocker&quot;: null}</code></div>
+          <div class="miss-body">Reality: Buildable today for basic/Standard Access; Advanced Access (production-scale, other users&#x27; ad accounts) needs App Review + Business Verification - a real practical caveat.</div>
+          <div class="miss-evidence"><a href="https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/" target="_blank" rel="noopener">https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/</a></div>
+        </li>
+        <li class="miss-item">
+          <div class="miss-head"><strong>Stripe</strong> &middot; Self-serve status</div>
+          <div class="miss-body">Said: <code>{&quot;self_serve&quot;: false, &quot;gating_reason&quot;: null}</code></div>
+          <div class="miss-body">Reality: Self-serve: dashboard.stripe.com/register is a plain signup form (email+password, no approval), and test-mode API keys are available immediately after signup.</div>
+          <div class="miss-evidence"><a href="https://dashboard.stripe.com/register" target="_blank" rel="noopener">https://dashboard.stripe.com/register</a></div>
+        </li></ul>
+
+    <details class="methodology">
+      <summary>Sample and method</summary>
+      <p>Sample (seed 42, stratified two per category): Salesforce, HubSpot, Front, Pylon, Zoho Cliq, Lark (Larksuite), Meta Ads, Threads (Meta), WooCommerce, Ecwid, DataForSEO, Clay, Vercel, Cloudflare, Jira, Smartsheet, Stripe, PitchBook, Consensus, YouTube Transcript.</p>
+      <p>The pass shown here as "pass one" was reconstructed under the original, unfixed search logic and run only against this sample. The real hundred&#8209;app first pass was lost to a bug in the results writer, described in the Agent section above rather than left out. Both passes were then scored against the same, independently established ground truth for each of the eighty checks, so the comparison holds.</p>
+    </details>
+  </section>
+
+  <footer>
+    <div>Generated from <code>data/results/pass2.json</code> and <code>data/verification/</code>. Re&#8209;run <code>python site/build.py</code> to regenerate after any change to the pipeline.</div>
+    <div><a href="https://github.com/cfcmadlad/composio-app-research" target="_blank" rel="noopener">Source repository &rarr;</a></div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.find-row'));
+  var searchInput = document.getElementById('search-input');
+  var categoryFilter = document.getElementById('category-filter');
+  var selfServeFilter = document.getElementById('selfserve-filter');
+  var emptyState = document.getElementById('empty-state');
+
+  function applyFilters() {
+    var q = searchInput.value.trim().toLowerCase();
+    var cat = categoryFilter.value;
+    var ss = selfServeFilter.value;
+    var visible = 0;
+    rows.forEach(function (row) {
+      var name = row.querySelector('.td-name a').textContent.toLowerCase();
+      var matchesQuery = !q || name.indexOf(q) !== -1;
+      var matchesCat = !cat || row.getAttribute('data-category') === cat;
+      var matchesSS = !ss || row.getAttribute('data-selfserve') === ss;
+      var show = matchesQuery && matchesCat && matchesSS;
+      row.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    emptyState.style.display = visible === 0 ? '' : 'none';
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+  categoryFilter.addEventListener('change', applyFilters);
+  selfServeFilter.addEventListener('change', applyFilters);
+})();
+</script>
