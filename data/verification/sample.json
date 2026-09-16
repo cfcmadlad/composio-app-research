@@ -1,0 +1,106 @@
+{
+  "method": "stratified random sample, 2 apps per category, seed=42, selected before pass-1 results were reviewed",
+  "sample_size": 20,
+  "apps": [
+    {
+      "id": 1,
+      "category": "CRM and Sales",
+      "name": "Salesforce"
+    },
+    {
+      "id": 2,
+      "category": "CRM and Sales",
+      "name": "HubSpot"
+    },
+    {
+      "id": 14,
+      "category": "Support and Helpdesk",
+      "name": "Front"
+    },
+    {
+      "id": 15,
+      "category": "Support and Helpdesk",
+      "name": "Pylon"
+    },
+    {
+      "id": 23,
+      "category": "Communications and Messaging",
+      "name": "Zoho Cliq"
+    },
+    {
+      "id": 24,
+      "category": "Communications and Messaging",
+      "name": "Lark (Larksuite)"
+    },
+    {
+      "id": 32,
+      "category": "Marketing, Ads, Email and Social",
+      "name": "Meta Ads"
+    },
+    {
+      "id": 39,
+      "category": "Marketing, Ads, Email and Social",
+      "name": "Threads (Meta)"
+    },
+    {
+      "id": 42,
+      "category": "Ecommerce",
+      "name": "WooCommerce"
+    },
+    {
+      "id": 47,
+      "category": "Ecommerce",
+      "name": "Ecwid"
+    },
+    {
+      "id": 51,
+      "category": "Data, SEO and Scraping",
+      "name": "DataForSEO"
+    },
+    {
+      "id": 60,
+      "category": "Data, SEO and Scraping",
+      "name": "Clay"
+    },
+    {
+      "id": 62,
+      "category": "Developer, Infra and Data platforms",
+      "name": "Vercel"
+    },
+    {
+      "id": 64,
+      "category": "Developer, Infra and Data platforms",
+      "name": "Cloudflare"
+    },
+    {
+      "id": 74,
+      "category": "Productivity and Project Management",
+      "name": "Jira"
+    },
+    {
+      "id": 79,
+      "category": "Productivity and Project Management",
+      "name": "Smartsheet"
+    },
+    {
+      "id": 81,
+      "category": "Finance and Fintech",
+      "name": "Stripe"
+    },
+    {
+      "id": 90,
+      "category": "Finance and Fintech",
+      "name": "PitchBook"
+    },
+    {
+      "id": 94,
+      "category": "AI, Research and Media-native",
+      "name": "Consensus"
+    },
+    {
+      "id": 99,
+      "category": "AI, Research and Media-native",
+      "name": "YouTube Transcript"
+    }
+  ]
+}

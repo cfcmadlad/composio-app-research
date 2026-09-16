@@ -1,0 +1,1516 @@
+[
+  {
+    "app_id": 1,
+    "app_name": "Salesforce",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2"
+    ],
+    "pass2_value": [
+      "OAuth2",
+      "token"
+    ],
+    "ground_truth": "OAuth2 (Connected Apps / newer External Client Apps) issuing bearer access tokens used on every REST call.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developer.salesforce.com/docs/platform/api-rest/guide/intro-oauth-and-connected-apps.html",
+    "notes": "Both answers are defensible: OAuth2 is the primary flow; the access token it produces is a literal bearer token used on calls, so pass2's more granular ['OAuth2','token'] is more precise, not a correction of an error.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 1,
+    "app_name": "Salesforce",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Self-serve via free Developer Edition org signup. Note: Salesforce is retiring 'Connected App' creation in favor of 'External Client Apps' as of a recent platform change, but the self-serve path itself remains.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developer.salesforce.com/docs/platform/api-rest/guide/intro-oauth-and-connected-apps.html",
+    "notes": "Docs literally state 'Creating connected apps is restricted' as of a recent release, redirecting to External Client Apps - a naming/mechanism change, not a new self-serve gate.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 1,
+    "app_name": "Salesforce",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "Salesforce exposes extensive REST and SOAP APIs for accessing standard and custom sObjects, executing SOQL queries, managing metadata, and performing CRUD operations across the platform.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "Salesforce provides extensive REST and SOAP APIs (including sObject CRUD, query, metadata, and tooling endpoints) that enable programmatic access to CRM data and functionality.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Extensive REST and SOAP APIs (sObjects CRUD, SOQL query, metadata, tooling). No officially documented MCP server.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developer.salesforce.com/docs",
+    "notes": "Well-established, uncontroversial characterization.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 1,
+    "app_name": "Salesforce",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developer.salesforce.com/docs",
+    "notes": "Consistent with self-serve + documented API.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 2,
+    "app_name": "HubSpot",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2",
+      "API key",
+      "token"
+    ],
+    "pass2_value": [
+      "OAuth2",
+      "API key",
+      "token"
+    ],
+    "ground_truth": "OAuth2 (public apps) and private-app static access tokens.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.hubspot.com/docs/api/oauth-quickstart-guide",
+    "notes": "HubSpot supports both OAuth2 apps and private-app tokens; matches both passes.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 2,
+    "app_name": "HubSpot",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free HubSpot developer account + free CRM tier, no sales contact needed.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.hubspot.com",
+    "notes": "Well-established.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 2,
+    "app_name": "HubSpot",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "HubSpot offers a RESTful API surface covering CRM objects (e.g., contacts via /crm/objects/2026-03/contacts), conversations, custom channel registration, webhook journal management, and other sales\u2011related endpoints.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "HubSpot provides a comprehensive set of RESTful APIs for CRM objects (contacts, companies, deals, etc.), marketing, sales, service, content, and webhook management, all accessed via https://api.hubapi.com with JSON payloads and standard HTTP methods.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Comprehensive REST API for CRM objects, marketing, sales, service, content, webhooks.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.hubspot.com/docs/api/overview",
+    "notes": "Well-established.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 2,
+    "app_name": "HubSpot",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.hubspot.com",
+    "notes": "Consistent.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 14,
+    "app_name": "Front",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2",
+      "token"
+    ],
+    "pass2_value": [
+      "OAuth2",
+      "token"
+    ],
+    "ground_truth": "OAuth2 apps and static API tokens.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://dev.frontapp.com/docs/create-and-revoke-api-tokens",
+    "notes": "Matches Front's documented model.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 14,
+    "app_name": "Front",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Front offers a self-serve trial and in-account API token generation.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://front.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 14,
+    "app_name": "Front",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "Front's Core API provides programmatic access to conversations, contacts, inboxes, tags, teams, accounts, and other resources, with granular read/write/delete/send permissions and namespace scoping (global, shared, private).",
+      "mcp_exists": true
+    },
+    "pass2_value": {
+      "summary": "Front's Core API provides REST endpoints for managing conversations, contacts, inboxes, teams, tags, rules, and other customer\u2011service resources, supporting CRUD operations and message sending.",
+      "mcp_exists": true
+    },
+    "ground_truth": "Core API: conversations, contacts, inboxes, tags, teams CRUD. Official MCP server exists (beta) at dev.frontapp.com/docs/mcp-server.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://dev.frontapp.com/docs/mcp-server",
+    "notes": "Live-confirmed via search: official beta MCP server, community posts, help center article all corroborate.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 14,
+    "app_name": "Front",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://dev.frontapp.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 15,
+    "app_name": "Pylon",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "token"
+    ],
+    "pass2_value": [
+      "token"
+    ],
+    "ground_truth": "Bearer API token only (no OAuth2 documented for the core API).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://docs.usepylon.com/pylon-docs/developer/api/authentication",
+    "notes": "Docs confirm: 'The Pylon API uses Bearer authentication.'",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 15,
+    "app_name": "Pylon",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": false,
+      "gating_reason": "API token must be generated in the Pylon dashboard, which is only available after requesting a demo or contacting sales."
+    },
+    "ground_truth": "Gated - usepylon.com's own homepage is a 'Book a Demo' form with no self-serve signup or pricing page found.",
+    "pass0_correct": false,
+    "pass2_correct": true,
+    "evidence_url": "https://usepylon.com",
+    "notes": "Confirmed live: usepylon.com redirects straight to a demo-booking form. Pass 1 wrongly called this self-serve.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 15,
+    "app_name": "Pylon",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "The Pylon API provides endpoints for managing accounts, activities, files, highlights, attachments, audit logs, call recordings, contacts, custom fields, custom objects, issues, feature requests, knowledge base, macros, user profile (me), messages, surveys, tags, tasks & projects, teams, ticket forms, training data, user roles, users, external IDs, custom apps, embedded iframes, and webhooks.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "Pylon provides a REST API secured with Bearer token authentication. Documented endpoints include /me for organization and user details; other functionality such as ticketing, agent management, and integrations is implied but not publicly listed in the provided sources.",
+      "mcp_exists": true
+    },
+    "ground_truth": "REST API (Bearer token) with a documented but narrow public surface (e.g. /me); a real, official MCP server exists at docs.usepylon.com/pylon-docs/integrations/pylon-mcp.",
+    "pass0_correct": false,
+    "pass2_correct": true,
+    "evidence_url": "https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp",
+    "notes": "Confirmed live: Pylon MCP docs page exists. Pass 1 wrongly said no MCP.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 15,
+    "app_name": "Pylon",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Technically buildable (real, working API), but the gate (sales demo required for dashboard/token access) is the actual practical blocker and should appear in the blocker field.",
+    "pass0_correct": false,
+    "pass2_correct": false,
+    "evidence_url": "https://usepylon.com",
+    "notes": "Neither pass carried the self-serve gate through to the blocker field - pass2 correctly flagged the gate in self_serve/gating_reason but left blocker=null, an internal inconsistency in the extraction, not just a pass-1 miss.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 23,
+    "app_name": "Zoho Cliq",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2"
+    ],
+    "pass2_value": [
+      "OAuth2"
+    ],
+    "ground_truth": "OAuth2 (Zoho's standard account auth across all Zoho products).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://www.zoho.com/cliq/help/restapi/v2/",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 23,
+    "app_name": "Zoho Cliq",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free Zoho account + free Cliq tier, self-serve API access.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://www.zoho.com/cliq",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 23,
+    "app_name": "Zoho Cliq",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "The Zoho Cliq API exposes resources for Channels, Chats, Messages, Attachments, Reminders, Bots, Bot Messages, Webhooks, Message Actions, Organization settings, Teams, Departments, Designations, Users, User Fields, Profile, Storage Data, Datastores, Datastore Records, Media Sessions, Applications, Calendar Events, and related CRUD operations.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "The API offers CRUD operations for chats (direct/group), messages, bots, slash commands, message actions, widgets, schedulers, and user/customization settings. It supports network\u2011scoped endpoints, multiple data\u2011center domains, and standardized pagination (next_token, sync_token). Both v2 and v3 versions are available, with v3 adding richer chat capabilities and platform component management.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Broad REST API: channels, chats, messages, bots, webhooks, org/user management.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://www.zoho.com/cliq/help/restapi/v2/",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 23,
+    "app_name": "Zoho Cliq",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://www.zoho.com/cliq",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 24,
+    "app_name": "Lark (Larksuite)",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2",
+      "token"
+    ],
+    "pass2_value": [
+      "OAuth2",
+      "token"
+    ],
+    "ground_truth": "OAuth2 plus tenant/app/user access tokens (Lark Open Platform's documented token tiers).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://open.larksuite.com/document",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 24,
+    "app_name": "Lark (Larksuite)",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free Lark/Larksuite developer account, self-serve app creation.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://open.larksuite.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 24,
+    "app_name": "Lark (Larksuite)",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "Lark provides a broad set of OpenAPI endpoints (e.g., contacts, messaging, docs, calendar, drive) that can be called via HTTP with appropriate access tokens.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "Lark Open Platform provides a wide range of REST APIs covering contacts, departments, messaging, documents, events, calendars, drives, and other enterprise collaboration resources. Each API specifies required token type (tenant, app, or user) and is accessed via standard HTTP with Bearer tokens.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Broad Open Platform REST API: contacts, messaging, docs, calendar, drive.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://open.larksuite.com/document",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 24,
+    "app_name": "Lark (Larksuite)",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://open.larksuite.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 32,
+    "app_name": "Meta Ads",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2",
+      "token"
+    ],
+    "pass2_value": [
+      "OAuth2"
+    ],
+    "ground_truth": "OAuth2 access tokens (system-user or user tokens); both 'OAuth2 alone' and 'OAuth2+token' are defensible descriptions of the same mechanism.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.facebook.com/docs/marketing-api/get-started/authentication/",
+    "notes": "Same OAuth2-produces-a-bearer-token reasoning as Salesforce; not a real disagreement.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 32,
+    "app_name": "Meta Ads",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": false,
+      "gating_reason": "Access to many ad\u2011related permissions requires Business verification and App Review (Advanced Access) before production use."
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Standard Access tier is self-serve (no App Review needed for a developer's own ad account); Advanced Access (production, other users' accounts) requires Meta App Review + Business Verification.",
+    "pass0_correct": false,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/",
+    "notes": "Genuinely nuanced/tiered access model. Per the assignment's own definition (no admin approval/contact-sales needed to get SOME working credentials), pass2's self-serve=true is the more accurate call, though pass0's caution about production/Advanced Access isn't fabricated either.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 32,
+    "app_name": "Meta Ads",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "The Marketing API exposes endpoints for creating, reading, updating, and deleting ad campaigns, ad sets, ads, audiences, and retrieving performance insights, budgets, and reporting data.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "A comprehensive set of Graph API endpoints for campaigns, ad sets, creatives, targeting, insights, audience management, Conversions API, Catalog API, Business Management API, and Commerce API, enabling full lifecycle ad operations.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Comprehensive Graph API: campaigns, ad sets, creatives, targeting, insights, Conversions API, etc.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.facebook.com/docs/marketing-apis",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 32,
+    "app_name": "Meta Ads",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": "Required app review and business verification for production\u2011level ad management permissions."
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today for basic/Standard Access; Advanced Access (production-scale, other users' ad accounts) needs App Review + Business Verification - a real practical caveat.",
+    "pass0_correct": true,
+    "pass2_correct": false,
+    "evidence_url": "https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/",
+    "notes": "Pass1's blocker text captured a real, relevant caveat about production use; pass2 dropped it entirely (blocker=null) despite its own notes acknowledging the same nuance - the extraction didn't propagate what it already knew into the blocker field.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 39,
+    "app_name": "Threads (Meta)",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2"
+    ],
+    "pass2_value": [
+      "OAuth2"
+    ],
+    "ground_truth": "OAuth2 (Meta Graph API standard).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.facebook.com/docs/threads",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 39,
+    "app_name": "Threads (Meta)",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Self-serve via Meta developer app + Threads API access (Standard Access tier).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.facebook.com/docs/threads",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 39,
+    "app_name": "Threads (Meta)",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "Endpoints include user profile retrieval, media publishing (single and carousel posts), reply creation and reading, insights queries, and token management (exchange short\u2011lived for long\u2011lived tokens and refresh long\u2011lived tokens) via the Graph API (e.g., /access_token, /refresh_access_token, publishing endpoints, reply endpoints, insights endpoints).",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "Endpoints for creating and publishing posts (including carousel), retrieving user profiles and media, reading and managing replies, and fetching insights and analytics. Includes token exchange, token refresh, and media download capabilities.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Publishing, replies, profile/media retrieval, insights, token exchange/refresh.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.facebook.com/docs/threads",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 39,
+    "app_name": "Threads (Meta)",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.facebook.com/docs/threads",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 42,
+    "app_name": "WooCommerce",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "API key",
+      "Basic",
+      "other"
+    ],
+    "pass2_value": [
+      "API key",
+      "Basic",
+      "other"
+    ],
+    "ground_truth": "Consumer key/secret, documented as HTTP Basic Auth over HTTPS (or OAuth1.0a one-legged over HTTP).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://woocommerce.com/document/woocommerce-rest-api/",
+    "notes": "'API key'+'Basic'+'other' reasonably captures this even without naming OAuth1.0a explicitly.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 42,
+    "app_name": "WooCommerce",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free, self-hosted WordPress plugin - no gate at all.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://woocommerce.com/document/woocommerce-rest-api/",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 42,
+    "app_name": "WooCommerce",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "The WooCommerce REST API (v3) exposes CRUD endpoints for core e\u2011commerce resources (orders, products, customers, coupons, etc.) using standard HTTP verbs, JSON payloads, pagination, and supports query\u2011string filters. It follows WordPress REST conventions and returns JSON responses with ISO8601 dates and string\u2011encoded monetary values.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "A comprehensive set of CRUD REST endpoints for e-commerce resources (products, orders, customers, coupons, categories, shipping, taxes, etc.) exposed under the WordPress REST namespace at /wp-json/wc/v3/ (and earlier versions), using standard HTTP verbs and JSON payloads.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Comprehensive REST v3 CRUD API for orders, products, customers, coupons, etc.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://woocommerce.com/document/woocommerce-rest-api/",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 42,
+    "app_name": "WooCommerce",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://woocommerce.com/document/woocommerce-rest-api/",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 47,
+    "app_name": "Ecwid",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2",
+      "token"
+    ],
+    "pass2_value": [
+      "OAuth2",
+      "token"
+    ],
+    "ground_truth": "OAuth2 (public apps) and long-lived public/secret tokens (private apps).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://api-docs.ecwid.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 47,
+    "app_name": "Ecwid",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free Ecwid account signup, self-serve token/app creation.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://api-docs.ecwid.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 47,
+    "app_name": "Ecwid",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "Ecwid offers a comprehensive REST API covering store profile, catalog (products, categories, options), orders, customers, discounts, promotions, shipping, payment, invoices, staff, and more. Access is controlled via non\u2011expiring access tokens (public or secret) and OAuth 2.0 for public apps. The API is invoked with store ID and token, and additional features like webhooks and custom storefront/checkout logic use self\u2011hosted HTTPS endpoints.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "The Ecwid REST API provides endpoints for general store settings, orders, products, customers, categories, discounts, payments, and shipping. It also supports webhooks for event-driven integrations and a JavaScript API for storefront customization (cart, checkout, customer management, event tracking, etc.). Rate limits are 600 requests per minute per token.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Comprehensive REST API: store profile, catalog, orders, customers, webhooks.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://api-docs.ecwid.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 47,
+    "app_name": "Ecwid",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://api-docs.ecwid.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 51,
+    "app_name": "DataForSEO",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "Basic"
+    ],
+    "pass2_value": [
+      "Basic"
+    ],
+    "ground_truth": "HTTP Basic Auth (login:password issued as API credentials).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://docs.dataforseo.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 51,
+    "app_name": "DataForSEO",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free trial signup, self-serve.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://docs.dataforseo.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 51,
+    "app_name": "DataForSEO",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "The API offers numerous SEO\u2011related endpoints (keyword, SERP, backlinks, rank tracking, etc.) accessible via standard HTTP requests.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "A RESTful API exposing numerous SEO endpoints (SERP, keyword, on\u2011page, backlinks, rank tracking, etc.) returning JSON by default (with optional XML or HTML), documented via OpenAPI spec and supported by client libraries in PHP, Python, C#, Java, and TypeScript.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Broad SEO API: SERP, keywords, backlinks, on-page, rank tracking.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://docs.dataforseo.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 51,
+    "app_name": "DataForSEO",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://docs.dataforseo.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 60,
+    "app_name": "Clay",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "API key"
+    ],
+    "pass2_value": [
+      "API key"
+    ],
+    "ground_truth": "API key.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.clay.com/public-api/authentication",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 60,
+    "app_name": "Clay",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free trial, self-serve signup.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://clay.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 60,
+    "app_name": "Clay",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "Clay provides a public API with endpoints (e.g., /public/v0/me) and a full reference covering paths, request bodies, and response schemas; the API is intended for backend jobs, internal tools, and product features.",
+      "mcp_exists": true
+    },
+    "pass2_value": {
+      "summary": "Clay provides a public REST API (v0) for accessing workspace data, managing agents, and orchestrating GTM workflows. Endpoints include user info, data marketplace, agent actions, and execution triggers, all authenticated with an API key.",
+      "mcp_exists": true
+    },
+    "ground_truth": "Public REST API (v0) for workspace/agent data; official MCP server confirmed at clay.com/mcp.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://www.clay.com/mcp",
+    "notes": "Live-confirmed: official MCP page, guide, and third-party GitHub client all corroborate.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 60,
+    "app_name": "Clay",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.clay.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 62,
+    "app_name": "Vercel",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2",
+      "token",
+      "Basic"
+    ],
+    "pass2_value": [
+      "token"
+    ],
+    "ground_truth": "Bearer access tokens only. Docs: 'Vercel Access Tokens are required... Authorization: Bearer <TOKEN>.' No Basic auth found; OAuth2 exists only for the separate Integrations/Marketplace flow, not the primary REST API.",
+    "pass0_correct": false,
+    "pass2_correct": true,
+    "evidence_url": "https://vercel.com/docs/rest-api",
+    "notes": "Confirmed live on vercel.com/docs/rest-api. Pass1's inclusion of 'Basic' has no supporting evidence on the canonical page.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 62,
+    "app_name": "Vercel",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free Hobby plan, self-serve token generation.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://vercel.com/docs/rest-api",
+    "notes": "",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 62,
+    "app_name": "Vercel",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "The Vercel API includes endpoints for listing and managing projects, access groups, project members, domains, deployments, and more, accessible via REST (e.g., GET /v10/projects) or the @vercel/sdk library.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "A comprehensive REST API covering access groups, AI gateway rules, artifacts, billing, redirects, checks, networking, Connect, deployments, DNS, domain registrar, domains, drains, edge\u2011cache, edge\u2011config, environment variables, and more.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Very broad REST API (dozens of endpoint categories: projects, deployments, domains, DNS, env vars, etc.), confirmed live.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://vercel.com/docs/rest-api",
+    "notes": "",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 62,
+    "app_name": "Vercel",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://vercel.com/docs/rest-api",
+    "notes": "",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 64,
+    "app_name": "Cloudflare",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "token",
+      "API key"
+    ],
+    "pass2_value": [
+      "API key",
+      "token"
+    ],
+    "ground_truth": "Scoped API Tokens (recommended) and legacy Global API Key.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.cloudflare.com/fundamentals/api/get-started/keys/",
+    "notes": "Order differs, same set.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 64,
+    "app_name": "Cloudflare",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free Cloudflare account, self-serve.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.cloudflare.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 64,
+    "app_name": "Cloudflare",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "A comprehensive JSON/REST API (Version 4) with endpoints for zones, DNS records, SSL certificates, firewall rules, workers, and many other Cloudflare products, accessed via https://api.cloudflare.com/client/v4/ using standard HTTP methods (GET, POST, PATCH, DELETE).",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "A comprehensive REST API covering account & user management, DNS, networking, security (firewall, bot management, etc.), Workers & Pages, storage (KV, R2, D1), analytics, AI services, and many other Cloudflare product categories.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Very broad REST API v4: DNS, zones, Workers, security, storage, analytics.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.cloudflare.com/api",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 64,
+    "app_name": "Cloudflare",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.cloudflare.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 74,
+    "app_name": "Jira",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2",
+      "Basic",
+      "token"
+    ],
+    "pass2_value": [
+      "OAuth2",
+      "Basic",
+      "token"
+    ],
+    "ground_truth": "OAuth2 (3LO), Basic auth using an API token as the password, and PATs.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 74,
+    "app_name": "Jira",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free Atlassian account, self-serve API token generation.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developer.atlassian.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 74,
+    "app_name": "Jira",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "The Jira Software Cloud REST API exposes resources for issues, projects, boards, sprints, agile operations, custom fields, builds, deployments, and development information, using standard HTTP methods (GET, POST, PUT, DELETE) with pagination and JSON payloads.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "A comprehensive REST API covering issue CRUD, project management, agile resources (boards, sprints, backlog), search, attachments, and development information, with pagination, expansion, and both cloud and on\u2011premises endpoints.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Comprehensive REST API: issues, projects, boards, sprints, agile resources.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 74,
+    "app_name": "Jira",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developer.atlassian.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 79,
+    "app_name": "Smartsheet",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2",
+      "API key"
+    ],
+    "pass2_value": [
+      "OAuth2",
+      "API key"
+    ],
+    "ground_truth": "OAuth2 and direct API access tokens.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.smartsheet.com/api/smartsheet/guides/basics/authentication",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 79,
+    "app_name": "Smartsheet",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free trial, self-serve developer token generation.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://smartsheet.com/developers",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 79,
+    "app_name": "Smartsheet",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "The Smartsheet API offers RESTful endpoints to create, read, update, and delete sheets, rows, columns, workspaces, users, groups, reports, sights (dashboards), and webhooks, as well as to manage access scopes and retrieve current user information.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "A comprehensive REST API covering sheets, rows, columns, workspaces, reports, users, groups, webhooks, automation, and other Smartsheet resources.",
+      "mcp_exists": true
+    },
+    "ground_truth": "Comprehensive REST API; official, GA MCP server confirmed at developers.smartsheet.com/ai-mcp/smartsheet/mcp-server.",
+    "pass0_correct": false,
+    "pass2_correct": true,
+    "evidence_url": "https://developers.smartsheet.com/ai-mcp/smartsheet/mcp-server",
+    "notes": "Live-confirmed: Smartsheet MCP server is GA (announced March 2026). Pass1 wrongly said no MCP.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 79,
+    "app_name": "Smartsheet",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://smartsheet.com/developers",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 81,
+    "app_name": "Stripe",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "API key",
+      "Basic",
+      "token"
+    ],
+    "pass2_value": [
+      "API key",
+      "Basic"
+    ],
+    "ground_truth": "Secret API key sent via HTTP Basic Auth (key as username, blank password). No separate 'token' concept beyond the key itself.",
+    "pass0_correct": false,
+    "pass2_correct": true,
+    "evidence_url": "https://stripe.com/docs/api/authentication",
+    "notes": "Pass2's ['API key','Basic'] precisely matches Stripe's documented mechanism; pass1's added 'token' is redundant/imprecise.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 81,
+    "app_name": "Stripe",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": false,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": false,
+      "gating_reason": null
+    },
+    "ground_truth": "Self-serve: dashboard.stripe.com/register is a plain signup form (email+password, no approval), and test-mode API keys are available immediately after signup.",
+    "pass0_correct": false,
+    "pass2_correct": false,
+    "evidence_url": "https://dashboard.stripe.com/register",
+    "notes": "Confirmed live. BOTH passes wrongly marked Stripe as not self-serve - a genuine shared miss that survived the fix, worth flagging prominently.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 81,
+    "app_name": "Stripe",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "Not described in provided sources.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "The Stripe API is organized around REST with predictable resource-oriented URLs, accepts form\u2011encoded request bodies, returns JSON\u2011encoded responses, and uses standard HTTP verbs and response codes.",
+      "mcp_exists": false
+    },
+    "ground_truth": "REST API, resource-oriented URLs, JSON responses, standard HTTP verbs - extremely well documented.",
+    "pass0_correct": false,
+    "pass2_correct": true,
+    "evidence_url": "https://stripe.com/docs/api",
+    "notes": "Pass1 failed to extract this field entirely ('Not described in provided sources'); pass2 got an accurate description matching Stripe's own docs language.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 81,
+    "app_name": "Stripe",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today - true regardless of the self-serve field error above.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://stripe.com/docs/api",
+    "notes": "Correct on its own merits, though inconsistent with the wrongly-false self_serve field in both passes.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 90,
+    "app_name": "PitchBook",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "API key",
+      "token"
+    ],
+    "pass2_value": [
+      "API key",
+      "token"
+    ],
+    "ground_truth": "API key / token issued after contract.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://pitchbook.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 90,
+    "app_name": "PitchBook",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": false,
+      "gating_reason": "Access requires a separate contract and a request to the Direct Data team to obtain an API key or authentication token."
+    },
+    "pass2_value": {
+      "self_serve": false,
+      "gating_reason": "Access requires a separate contract and approval from PitchBook\u2019s Direct Data team; API keys or tokens are issued after sales engagement."
+    },
+    "ground_truth": "Gated - enterprise financial data platform, requires a paid contract via PitchBook's Direct Data team.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://pitchbook.com",
+    "notes": "Well-established positioning.",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 90,
+    "app_name": "PitchBook",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "Offers multiple relational endpoints covering financing details, deal and stock information, AI\u2011powered VC exit predictions, and other company, fund, and transaction data.",
+      "mcp_exists": false
+    },
+    "pass2_value": {
+      "summary": "The API exposes multiple relational endpoints covering financing details, deal stock information, company and fund data, and AI\u2011powered VC exit predictions, with a full endpoint list available in the API documentation.",
+      "mcp_exists": false
+    },
+    "ground_truth": "Relational endpoints for financing, deals, company/fund data.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://pitchbook.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 90,
+    "app_name": "PitchBook",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today (once contracted), no additional technical blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://pitchbook.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 94,
+    "app_name": "Consensus",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "OAuth2",
+      "API key",
+      "token"
+    ],
+    "pass2_value": [
+      "OAuth2",
+      "API key"
+    ],
+    "ground_truth": "API key for the search endpoint; the MCP server specifically uses OAuth. Both 3-method and 2-method lists are defensible summaries.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://docs.consensus.app/consensus-mcp",
+    "notes": "",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 94,
+    "app_name": "Consensus",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free tier / self-serve API access.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://consensus.app",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 94,
+    "app_name": "Consensus",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "GET /v1/quick_search endpoint returns filtered paper lists (title, authors, abstract, journal, year, citations, URL) with many query parameters (year, study type, human, sample size, etc.). MCP adds a `search` tool (same functionality) and a `fetch` tool for retrieving full paper details by ID.",
+      "mcp_exists": true
+    },
+    "pass2_value": {
+      "summary": "Provides a GET /v1/quick_search endpoint with extensive query parameters for filtering papers and a fetch tool for retrieving full paper details; responses include paper metadata, abstracts, citations, URLs, and, for paid plans, study type and takeaways.",
+      "mcp_exists": true
+    },
+    "ground_truth": "GET /v1/quick_search with rich filters; official MCP server (search + fetch tools) confirmed live at docs.consensus.app/consensus-mcp.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://docs.consensus.app/consensus-mcp",
+    "notes": "Live-confirmed.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 94,
+    "app_name": "Consensus",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://docs.consensus.app",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 99,
+    "app_name": "YouTube Transcript",
+    "dimension": "auth_methods",
+    "pass0_value": [
+      "API key"
+    ],
+    "pass2_value": [
+      "API key"
+    ],
+    "ground_truth": "API key.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://transcriptapi.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 99,
+    "app_name": "YouTube Transcript",
+    "dimension": "self_serve",
+    "pass0_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "pass2_value": {
+      "self_serve": true,
+      "gating_reason": null
+    },
+    "ground_truth": "Free tier, self-serve signup (typical for this class of small API-as-a-service tool).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://transcriptapi.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  },
+  {
+    "app_id": 99,
+    "app_name": "YouTube Transcript",
+    "dimension": "api_surface",
+    "pass0_value": {
+      "summary": "Endpoints for single video transcription (/api/v2/transcribe), batch transcription (/api/v2/batch), job polling (/api/v2/jobs/{job_id}), upload handling, playlist and channel resolution, transcript CRUD (list, fetch, translate, delete), and language management. All endpoints use API\u2011key authentication and support optional webhook callbacks for async ASR results.",
+      "mcp_exists": true
+    },
+    "pass2_value": {
+      "summary": "Endpoints include /youtube/transcript, /youtube/search, /youtube/channel/search, /youtube/channel/videos, /youtube/channel/latest, /youtube/playlist/videos, plus batch and credit\u2011based pricing. All features are accessible via REST, a YouTube MCP server, and pre\u2011built agent skills.",
+      "mcp_exists": true
+    },
+    "ground_truth": "REST endpoints for transcription/search; live, functioning MCP endpoint confirmed at transcriptapi.com/mcp (returned a valid MCP-protocol auth error).",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://transcriptapi.com/mcp",
+    "notes": "Live-confirmed via direct request to the MCP endpoint itself.",
+    "checked_via": "browser-use"
+  },
+  {
+    "app_id": 99,
+    "app_name": "YouTube Transcript",
+    "dimension": "buildability",
+    "pass0_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "pass2_value": {
+      "buildable_today": true,
+      "blocker": null
+    },
+    "ground_truth": "Buildable today, no blocker.",
+    "pass0_correct": true,
+    "pass2_correct": true,
+    "evidence_url": "https://transcriptapi.com",
+    "notes": "",
+    "checked_via": "knowledge+spot-check"
+  }
+]

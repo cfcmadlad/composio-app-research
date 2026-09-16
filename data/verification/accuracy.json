@@ -1,0 +1,208 @@
+{
+  "checks_completed": 80,
+  "checks_total_in_file": 80,
+  "pass0": {
+    "total_checks": 80,
+    "correct_checks": 71,
+    "accuracy_pct": 88.8,
+    "by_dimension": {
+      "auth_methods": {
+        "total": 20,
+        "correct": 18,
+        "accuracy_pct": 90.0
+      },
+      "self_serve": {
+        "total": 20,
+        "correct": 17,
+        "accuracy_pct": 85.0
+      },
+      "api_surface": {
+        "total": 20,
+        "correct": 17,
+        "accuracy_pct": 85.0
+      },
+      "buildability": {
+        "total": 20,
+        "correct": 19,
+        "accuracy_pct": 95.0
+      }
+    },
+    "misses": [
+      {
+        "app_id": 15,
+        "app_name": "Pylon",
+        "dimension": "self_serve",
+        "value": {
+          "self_serve": true,
+          "gating_reason": null
+        },
+        "ground_truth": "Gated - usepylon.com's own homepage is a 'Book a Demo' form with no self-serve signup or pricing page found.",
+        "evidence_url": "https://usepylon.com",
+        "notes": "Confirmed live: usepylon.com redirects straight to a demo-booking form. Pass 1 wrongly called this self-serve."
+      },
+      {
+        "app_id": 15,
+        "app_name": "Pylon",
+        "dimension": "api_surface",
+        "value": {
+          "summary": "The Pylon API provides endpoints for managing accounts, activities, files, highlights, attachments, audit logs, call recordings, contacts, custom fields, custom objects, issues, feature requests, knowledge base, macros, user profile (me), messages, surveys, tags, tasks & projects, teams, ticket forms, training data, user roles, users, external IDs, custom apps, embedded iframes, and webhooks.",
+          "mcp_exists": false
+        },
+        "ground_truth": "REST API (Bearer token) with a documented but narrow public surface (e.g. /me); a real, official MCP server exists at docs.usepylon.com/pylon-docs/integrations/pylon-mcp.",
+        "evidence_url": "https://docs.usepylon.com/pylon-docs/integrations/pylon-mcp",
+        "notes": "Confirmed live: Pylon MCP docs page exists. Pass 1 wrongly said no MCP."
+      },
+      {
+        "app_id": 15,
+        "app_name": "Pylon",
+        "dimension": "buildability",
+        "value": {
+          "buildable_today": true,
+          "blocker": null
+        },
+        "ground_truth": "Technically buildable (real, working API), but the gate (sales demo required for dashboard/token access) is the actual practical blocker and should appear in the blocker field.",
+        "evidence_url": "https://usepylon.com",
+        "notes": "Neither pass carried the self-serve gate through to the blocker field - pass2 correctly flagged the gate in self_serve/gating_reason but left blocker=null, an internal inconsistency in the extraction, not just a pass-1 miss."
+      },
+      {
+        "app_id": 32,
+        "app_name": "Meta Ads",
+        "dimension": "self_serve",
+        "value": {
+          "self_serve": false,
+          "gating_reason": "Access to many ad\u2011related permissions requires Business verification and App Review (Advanced Access) before production use."
+        },
+        "ground_truth": "Standard Access tier is self-serve (no App Review needed for a developer's own ad account); Advanced Access (production, other users' accounts) requires Meta App Review + Business Verification.",
+        "evidence_url": "https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/",
+        "notes": "Genuinely nuanced/tiered access model. Per the assignment's own definition (no admin approval/contact-sales needed to get SOME working credentials), pass2's self-serve=true is the more accurate call, though pass0's caution about production/Advanced Access isn't fabricated either."
+      },
+      {
+        "app_id": 62,
+        "app_name": "Vercel",
+        "dimension": "auth_methods",
+        "value": [
+          "OAuth2",
+          "token",
+          "Basic"
+        ],
+        "ground_truth": "Bearer access tokens only. Docs: 'Vercel Access Tokens are required... Authorization: Bearer <TOKEN>.' No Basic auth found; OAuth2 exists only for the separate Integrations/Marketplace flow, not the primary REST API.",
+        "evidence_url": "https://vercel.com/docs/rest-api",
+        "notes": "Confirmed live on vercel.com/docs/rest-api. Pass1's inclusion of 'Basic' has no supporting evidence on the canonical page."
+      },
+      {
+        "app_id": 79,
+        "app_name": "Smartsheet",
+        "dimension": "api_surface",
+        "value": {
+          "summary": "The Smartsheet API offers RESTful endpoints to create, read, update, and delete sheets, rows, columns, workspaces, users, groups, reports, sights (dashboards), and webhooks, as well as to manage access scopes and retrieve current user information.",
+          "mcp_exists": false
+        },
+        "ground_truth": "Comprehensive REST API; official, GA MCP server confirmed at developers.smartsheet.com/ai-mcp/smartsheet/mcp-server.",
+        "evidence_url": "https://developers.smartsheet.com/ai-mcp/smartsheet/mcp-server",
+        "notes": "Live-confirmed: Smartsheet MCP server is GA (announced March 2026). Pass1 wrongly said no MCP."
+      },
+      {
+        "app_id": 81,
+        "app_name": "Stripe",
+        "dimension": "auth_methods",
+        "value": [
+          "API key",
+          "Basic",
+          "token"
+        ],
+        "ground_truth": "Secret API key sent via HTTP Basic Auth (key as username, blank password). No separate 'token' concept beyond the key itself.",
+        "evidence_url": "https://stripe.com/docs/api/authentication",
+        "notes": "Pass2's ['API key','Basic'] precisely matches Stripe's documented mechanism; pass1's added 'token' is redundant/imprecise."
+      },
+      {
+        "app_id": 81,
+        "app_name": "Stripe",
+        "dimension": "self_serve",
+        "value": {
+          "self_serve": false,
+          "gating_reason": null
+        },
+        "ground_truth": "Self-serve: dashboard.stripe.com/register is a plain signup form (email+password, no approval), and test-mode API keys are available immediately after signup.",
+        "evidence_url": "https://dashboard.stripe.com/register",
+        "notes": "Confirmed live. BOTH passes wrongly marked Stripe as not self-serve - a genuine shared miss that survived the fix, worth flagging prominently."
+      },
+      {
+        "app_id": 81,
+        "app_name": "Stripe",
+        "dimension": "api_surface",
+        "value": {
+          "summary": "Not described in provided sources.",
+          "mcp_exists": false
+        },
+        "ground_truth": "REST API, resource-oriented URLs, JSON responses, standard HTTP verbs - extremely well documented.",
+        "evidence_url": "https://stripe.com/docs/api",
+        "notes": "Pass1 failed to extract this field entirely ('Not described in provided sources'); pass2 got an accurate description matching Stripe's own docs language."
+      }
+    ]
+  },
+  "pass2": {
+    "total_checks": 80,
+    "correct_checks": 77,
+    "accuracy_pct": 96.2,
+    "by_dimension": {
+      "auth_methods": {
+        "total": 20,
+        "correct": 20,
+        "accuracy_pct": 100.0
+      },
+      "self_serve": {
+        "total": 20,
+        "correct": 19,
+        "accuracy_pct": 95.0
+      },
+      "api_surface": {
+        "total": 20,
+        "correct": 20,
+        "accuracy_pct": 100.0
+      },
+      "buildability": {
+        "total": 20,
+        "correct": 18,
+        "accuracy_pct": 90.0
+      }
+    },
+    "misses": [
+      {
+        "app_id": 15,
+        "app_name": "Pylon",
+        "dimension": "buildability",
+        "value": {
+          "buildable_today": true,
+          "blocker": null
+        },
+        "ground_truth": "Technically buildable (real, working API), but the gate (sales demo required for dashboard/token access) is the actual practical blocker and should appear in the blocker field.",
+        "evidence_url": "https://usepylon.com",
+        "notes": "Neither pass carried the self-serve gate through to the blocker field - pass2 correctly flagged the gate in self_serve/gating_reason but left blocker=null, an internal inconsistency in the extraction, not just a pass-1 miss."
+      },
+      {
+        "app_id": 32,
+        "app_name": "Meta Ads",
+        "dimension": "buildability",
+        "value": {
+          "buildable_today": true,
+          "blocker": null
+        },
+        "ground_truth": "Buildable today for basic/Standard Access; Advanced Access (production-scale, other users' ad accounts) needs App Review + Business Verification - a real practical caveat.",
+        "evidence_url": "https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/",
+        "notes": "Pass1's blocker text captured a real, relevant caveat about production use; pass2 dropped it entirely (blocker=null) despite its own notes acknowledging the same nuance - the extraction didn't propagate what it already knew into the blocker field."
+      },
+      {
+        "app_id": 81,
+        "app_name": "Stripe",
+        "dimension": "self_serve",
+        "value": {
+          "self_serve": false,
+          "gating_reason": null
+        },
+        "ground_truth": "Self-serve: dashboard.stripe.com/register is a plain signup form (email+password, no approval), and test-mode API keys are available immediately after signup.",
+        "evidence_url": "https://dashboard.stripe.com/register",
+        "notes": "Confirmed live. BOTH passes wrongly marked Stripe as not self-serve - a genuine shared miss that survived the fix, worth flagging prominently."
+      }
+    ]
+  }
+}

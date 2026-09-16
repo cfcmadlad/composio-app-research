@@ -1,0 +1,621 @@
+[
+  {
+    "id": 1,
+    "category": "CRM and Sales",
+    "name": "Salesforce",
+    "hint": "salesforce.com",
+    "researched_at": "2026-09-16T13:26:31.169372Z",
+    "needs_human": false,
+    "search_query": "Salesforce developer API documentation authentication",
+    "source_urls": [
+      "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_oauth_and_connected_apps.htm",
+      "https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_oauth_and_connected_apps.htm"
+    ],
+    "one_line_description": "Salesforce is a cloud\u2011based CRM platform offering REST and SOAP APIs to manage sales, service, marketing, and custom data objects.",
+    "auth_methods": [
+      "OAuth2"
+    ],
+    "auth_evidence_url": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_oauth_and_connected_apps.htm",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_oauth_and_connected_apps.htm",
+    "api_surface_summary": "Salesforce exposes extensive REST and SOAP APIs for accessing standard and custom sObjects, executing SOQL queries, managing metadata, and performing CRUD operations across the platform.",
+    "api_surface_evidence_url": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_oauth_and_connected_apps.htm",
+    "mcp_exists": false,
+    "mcp_notes": "The provided documentation does not mention the Model Context Protocol (MCP) or any MCP server integration.",
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "All facts are taken from official Salesforce developer documentation. Authentication is via OAuth 2.0 (external client apps or connected apps). No MCP support is indicated. Developers can self\u2011serve by creating external client apps, which is allowed without special gating."
+  },
+  {
+    "id": 2,
+    "category": "CRM and Sales",
+    "name": "HubSpot",
+    "hint": "hubspot.com",
+    "researched_at": "2026-09-16T13:26:31.170276Z",
+    "needs_human": false,
+    "search_query": "HubSpot developer API documentation authentication",
+    "source_urls": [
+      "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/overview",
+      "https://developers.hubspot.com/docs/api-reference/auth-oauth-v3/public-token/post-oauth-v3-token"
+    ],
+    "one_line_description": "HubSpot is a cloud\u2011based CRM platform that provides APIs for managing contacts, companies, deals, conversations, webhooks and other sales\u2011related data.",
+    "auth_methods": [
+      "OAuth2",
+      "API key",
+      "token"
+    ],
+    "auth_evidence_url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/overview",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/overview",
+    "api_surface_summary": "HubSpot offers a RESTful API surface covering CRM objects (e.g., contacts via /crm/objects/2026-03/contacts), conversations, custom channel registration, webhook journal management, and other sales\u2011related endpoints.",
+    "api_surface_evidence_url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/overview",
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "medium",
+    "notes": "Authentication details (OAuth, static Bearer tokens, developer API keys, client\u2011credential tokens) are explicitly described in the HubSpot authentication overview. The API surface is inferred from example endpoints mentioned in the same page. No mention of Model Context Protocol (MCP) was found. The one\u2011line description is synthesized from HubSpot's known CRM focus but not directly quoted, leading to medium confidence."
+  },
+  {
+    "id": 14,
+    "category": "Support and Helpdesk",
+    "name": "Front",
+    "hint": "front.com",
+    "researched_at": "2026-09-16T13:26:31.170671Z",
+    "needs_human": false,
+    "search_query": "Front developer API documentation authentication",
+    "source_urls": [
+      "https://dev.frontapp.com/docs/authentication",
+      "https://dev.frontapp.com/docs/create-and-revoke-api-tokens"
+    ],
+    "one_line_description": "Front is a shared inbox and collaboration platform for managing support and helpdesk communications.",
+    "auth_methods": [
+      "OAuth2",
+      "token"
+    ],
+    "auth_evidence_url": "https://dev.frontapp.com/docs/authentication",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://dev.frontapp.com/docs/authentication",
+    "api_surface_summary": "Front's Core API provides programmatic access to conversations, contacts, inboxes, tags, teams, accounts, and other resources, with granular read/write/delete/send permissions and namespace scoping (global, shared, private).",
+    "api_surface_evidence_url": "https://dev.frontapp.com/docs/authentication",
+    "mcp_exists": true,
+    "mcp_notes": "The token scopes list includes an \"MCP server\" feature that lets Front data be exposed via the Model Context Protocol to clients like Claude or ChatGPT.",
+    "mcp_evidence_url": "https://dev.frontapp.com/docs/authentication",
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "medium",
+    "notes": "The one\u2011line description is inferred from Front\u2019s known category (support/helpdesk) as the documentation does not state it explicitly. All other fields are directly supported by the provided authentication and token documentation."
+  },
+  {
+    "id": 15,
+    "category": "Support and Helpdesk",
+    "name": "Pylon",
+    "hint": "usepylon.com",
+    "researched_at": "2026-09-16T13:26:39.471989Z",
+    "needs_human": false,
+    "search_query": "Pylon developer API documentation authentication",
+    "source_urls": [
+      "https://docs.usepylon.com/pylon-docs/developer/api/authentication",
+      "https://docs.usepylon.com/pylon-docs/developer"
+    ],
+    "one_line_description": "Pylon is a support and helpdesk platform offering a RESTful API to read and write data such as accounts, issues, contacts, files, knowledge base, tasks, and more.",
+    "auth_methods": [
+      "token"
+    ],
+    "auth_evidence_url": "https://docs.usepylon.com/pylon-docs/developer/api/authentication",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://docs.usepylon.com/pylon-docs/developer/api/authentication",
+    "api_surface_summary": "The Pylon API provides endpoints for managing accounts, activities, files, highlights, attachments, audit logs, call recordings, contacts, custom fields, custom objects, issues, feature requests, knowledge base, macros, user profile (me), messages, surveys, tags, tasks & projects, teams, ticket forms, training data, user roles, users, external IDs, custom apps, embedded iframes, and webhooks.",
+    "api_surface_evidence_url": "https://docs.usepylon.com/pylon-docs/developer",
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "All information is taken from Pylon's official developer documentation. No mention of the Model Context Protocol (MCP) was found, so MCP is marked as not existing."
+  },
+  {
+    "id": 23,
+    "category": "Communications and Messaging",
+    "name": "Zoho Cliq",
+    "hint": "zoho.com/cliq",
+    "researched_at": "2026-09-16T13:26:40.618057Z",
+    "needs_human": false,
+    "search_query": "Zoho Cliq developer API documentation authentication",
+    "source_urls": [
+      "https://www.zoho.com/cliq/help/restapi/v3/oauth/",
+      "https://www.zoho.com/cliq/help/restapi/v2/oauth/"
+    ],
+    "one_line_description": "Zoho Cliq is a team communication and messaging platform that provides REST APIs for managing channels, chats, messages, bots, webhooks, and other collaboration features.",
+    "auth_methods": [
+      "OAuth2"
+    ],
+    "auth_evidence_url": "https://www.zoho.com/cliq/help/restapi/v3/oauth/",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://www.zoho.com/cliq/help/restapi/v3/oauth/",
+    "api_surface_summary": "The Zoho Cliq API exposes resources for Channels, Chats, Messages, Attachments, Reminders, Bots, Bot Messages, Webhooks, Message Actions, Organization settings, Teams, Departments, Designations, Users, User Fields, Profile, Storage Data, Datastores, Datastore Records, Media Sessions, Applications, Calendar Events, and related CRUD operations.",
+    "api_surface_evidence_url": "https://www.zoho.com/cliq/help/restapi/v3/oauth/",
+    "mcp_exists": false,
+    "mcp_notes": "The documentation does not mention the Model Context Protocol (MCP) or any MCP server integration.",
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "All information is taken from Zoho's official API documentation pages for Cliq (v3 and v2 OAuth). The docs detail OAuth 2.0 authentication, required registration in the Zoho API console, and list the available scopes which define the API surface. No MCP integration is referenced."
+  },
+  {
+    "id": 24,
+    "category": "Communications and Messaging",
+    "name": "Lark (Larksuite)",
+    "hint": "open.larksuite.com",
+    "researched_at": "2026-09-16T13:26:41.452341Z",
+    "needs_human": false,
+    "search_query": "Lark (Larksuite) developer API documentation authentication",
+    "source_urls": [
+      "https://open.larksuite.com/document/home/introduction-to-scope-and-authorization/access-credentials",
+      "https://open.larksuite.com/document/server-docs/getting-started/api-access-token/app-access-token-development-guide"
+    ],
+    "one_line_description": "Lark (Larksuite) offers a RESTful OpenAPI platform for communications and messaging, enabling apps to access contacts, docs, events, and other enterprise resources.",
+    "auth_methods": [
+      "OAuth2",
+      "token"
+    ],
+    "auth_evidence_url": "https://open.larksuite.com/document/server-docs/getting-started/api-access-token/app-access-token-development-guide",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://open.larksuite.com/document/server-docs/getting-started/api-access-token/app-access-token-development-guide",
+    "api_surface_summary": "Lark provides a broad set of OpenAPI endpoints (e.g., contacts, messaging, docs, calendar, drive) that can be called via HTTP with appropriate access tokens.",
+    "api_surface_evidence_url": "https://open.larksuite.com/document/home/introduction-to-scope-and-authorization/access-credentials",
+    "mcp_exists": false,
+    "mcp_notes": "The documentation does not mention the Model Context Protocol (MCP).",
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "medium",
+    "notes": "Auth methods are derived from token categories and the OAuth code flow described in the docs. API surface summary is inferred from example contact API and general OpenAPI offering; the docs do not list every endpoint, so confidence is medium. No MCP reference found."
+  },
+  {
+    "id": 32,
+    "category": "Marketing, Ads, Email and Social",
+    "name": "Meta Ads",
+    "hint": "developers.facebook.com/docs/marketing-apis",
+    "researched_at": "2026-09-16T13:26:47.258333Z",
+    "needs_human": false,
+    "search_query": "Meta Ads developer API documentation authentication",
+    "source_urls": [
+      "https://developers.facebook.com/docs/marketing-api/get-started/authentication/",
+      "https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/"
+    ],
+    "one_line_description": "Meta Ads (Marketing API) lets developers programmatically manage ad accounts, campaigns, ad sets, ads, and retrieve insights on Meta platforms.",
+    "auth_methods": [
+      "OAuth2",
+      "token"
+    ],
+    "auth_evidence_url": "https://developers.facebook.com/docs/marketing-api/get-started/authentication/",
+    "self_serve": false,
+    "gating_reason": "Access to many ad\u2011related permissions requires Business verification and App Review (Advanced Access) before production use.",
+    "self_serve_evidence_url": "https://developers.facebook.com/docs/facebook-login/facebook-login-for-business/",
+    "api_surface_summary": "The Marketing API exposes endpoints for creating, reading, updating, and deleting ad campaigns, ad sets, ads, audiences, and retrieving performance insights, budgets, and reporting data.",
+    "api_surface_evidence_url": null,
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": "Required app review and business verification for production\u2011level ad management permissions.",
+    "confidence": "medium",
+    "notes": "Authentication details are clearly documented; however, the specific list of API endpoints is not enumerated in the provided sources, so the API surface summary is inferred from general Marketing API capabilities. No mention of Model Context Protocol was found."
+  },
+  {
+    "id": 39,
+    "category": "Marketing, Ads, Email and Social",
+    "name": "Threads (Meta)",
+    "hint": "developers.facebook.com/docs/threads",
+    "researched_at": "2026-09-16T13:26:48.363963Z",
+    "needs_human": false,
+    "search_query": "Threads (Meta) developer API documentation authentication",
+    "source_urls": [
+      "https://developers.facebook.com/docs/threads/get-started/",
+      "https://developers.facebook.com/docs/threads/get-started/long-lived-tokens/"
+    ],
+    "one_line_description": "The Threads API lets apps read user data, publish posts, manage replies, and retrieve insights on Meta's Threads social platform.",
+    "auth_methods": [
+      "OAuth2"
+    ],
+    "auth_evidence_url": "https://developers.facebook.com/docs/threads/get-started/",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://developers.facebook.com/docs/threads/get-started/",
+    "api_surface_summary": "Endpoints include user profile retrieval, media publishing (single and carousel posts), reply creation and reading, insights queries, and token management (exchange short\u2011lived for long\u2011lived tokens and refresh long\u2011lived tokens) via the Graph API (e.g., /access_token, /refresh_access_token, publishing endpoints, reply endpoints, insights endpoints).",
+    "api_surface_evidence_url": "https://developers.facebook.com/docs/threads/get-started/",
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "Requires a Meta app with the Threads use case, public server for media, and App Review approval for permissions beyond threads_basic. Tokens are OAuth2 user access tokens (short\u2011lived 1\u202fhour or long\u2011lived 60\u202fdays) that must be refreshed periodically."
+  },
+  {
+    "id": 42,
+    "category": "Ecommerce",
+    "name": "WooCommerce",
+    "hint": "woocommerce.com/document/woocommerce-rest-api",
+    "researched_at": "2026-09-16T13:26:49.846991Z",
+    "needs_human": false,
+    "search_query": "WooCommerce developer API documentation authentication",
+    "source_urls": [
+      "https://developer.woocommerce.com/docs/apis/rest-api/authentication/",
+      "https://developer.woocommerce.com/docs/apis/rest-api/"
+    ],
+    "one_line_description": "WooCommerce provides a REST API for e\u2011commerce platforms to create, read, update, and delete store data such as orders, products, and customers via JSON over HTTP.",
+    "auth_methods": [
+      "API key",
+      "Basic",
+      "other"
+    ],
+    "auth_evidence_url": "https://developer.woocommerce.com/docs/apis/rest-api/authentication/",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://developer.woocommerce.com/docs/apis/rest-api/",
+    "api_surface_summary": "The WooCommerce REST API (v3) exposes CRUD endpoints for core e\u2011commerce resources (orders, products, customers, coupons, etc.) using standard HTTP verbs, JSON payloads, pagination, and supports query\u2011string filters. It follows WordPress REST conventions and returns JSON responses with ISO8601 dates and string\u2011encoded monetary values.",
+    "api_surface_evidence_url": "https://developer.woocommerce.com/docs/apis/rest-api/",
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "Authentication can be performed with pre\u2011generated consumer key/secret via HTTP Basic Auth (or as query parameters) and also supports OAuth\u202f1.0a \"one\u2011legged\" flow, which is categorized as \"other\". No Model Context Protocol integration is mentioned."
+  },
+  {
+    "id": 47,
+    "category": "Ecommerce",
+    "name": "Ecwid",
+    "hint": "api-docs.ecwid.com",
+    "researched_at": "2026-09-16T13:26:55.977294Z",
+    "needs_human": false,
+    "search_query": "Ecwid developer API documentation authentication",
+    "source_urls": [
+      "https://docs.ecwid.com/get-started/make-your-first-api-request",
+      "https://docs.ecwid.com/develop-apps/app-settings"
+    ],
+    "one_line_description": "Ecwid is an ecommerce platform that provides a REST API for accessing and managing store data such as products, orders, customers, and more.",
+    "auth_methods": [
+      "OAuth2",
+      "token"
+    ],
+    "auth_evidence_url": "https://docs.ecwid.com/get-started/make-your-first-api-request",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://docs.ecwid.com/get-started/make-your-first-api-request",
+    "api_surface_summary": "Ecwid offers a comprehensive REST API covering store profile, catalog (products, categories, options), orders, customers, discounts, promotions, shipping, payment, invoices, staff, and more. Access is controlled via non\u2011expiring access tokens (public or secret) and OAuth 2.0 for public apps. The API is invoked with store ID and token, and additional features like webhooks and custom storefront/checkout logic use self\u2011hosted HTTPS endpoints.",
+    "api_surface_evidence_url": "https://docs.ecwid.com/develop-apps/app-settings",
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "No dedicated test mode; developers should use a separate test store. Some advanced features (webhooks, payment, shipping, custom JS/CSS, iframe) require self\u2011hosted HTTPS endpoints. Access tokens do not expire, and secret tokens must be kept confidential."
+  },
+  {
+    "id": 51,
+    "category": "Data, SEO and Scraping",
+    "name": "DataForSEO",
+    "hint": "docs.dataforseo.com",
+    "researched_at": "2026-09-16T13:26:57.134688Z",
+    "needs_human": false,
+    "search_query": "DataForSEO developer API documentation authentication",
+    "source_urls": [
+      "https://docs.dataforseo.com/v3/auth/",
+      "https://docs.dataforseo.com/v2/auth/"
+    ],
+    "one_line_description": "DataForSEO provides a REST API delivering extensive SEO data such as keyword research, SERP results, backlinks, rank tracking, and more.",
+    "auth_methods": [
+      "Basic"
+    ],
+    "auth_evidence_url": "https://docs.dataforseo.com/v3/auth/",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://docs.dataforseo.com/v2/auth/",
+    "api_surface_summary": "The API offers numerous SEO\u2011related endpoints (keyword, SERP, backlinks, rank tracking, etc.) accessible via standard HTTP requests.",
+    "api_surface_evidence_url": null,
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "medium",
+    "notes": "Authentication details are clearly documented (Basic auth with login:password). Self\u2011service sign\u2011up is mentioned in the v2 auth page. No explicit list of endpoints is provided in the fetched sources, so the API surface summary is inferred from the product\u2019s general description, resulting in medium confidence. No mention of Model Context Protocol (MCP) was found."
+  },
+  {
+    "id": 60,
+    "category": "Data, SEO and Scraping",
+    "name": "Clay",
+    "hint": "clay.com",
+    "researched_at": "2026-09-16T13:26:58.723982Z",
+    "needs_human": false,
+    "search_query": "Clay developer API documentation authentication",
+    "source_urls": [
+      "https://developers.clay.com/public-api/authentication",
+      "https://developers.clay.com/quickstart"
+    ],
+    "one_line_description": "Clay offers a public REST API and an agent plugin that equips coding agents with Clay's skills, MCP tools, and CLI for building applications.",
+    "auth_methods": [
+      "API key"
+    ],
+    "auth_evidence_url": "https://developers.clay.com/public-api/authentication",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://developers.clay.com/quickstart",
+    "api_surface_summary": "Clay provides a public API with endpoints (e.g., /public/v0/me) and a full reference covering paths, request bodies, and response schemas; the API is intended for backend jobs, internal tools, and product features.",
+    "api_surface_evidence_url": "https://developers.clay.com/quickstart",
+    "mcp_exists": true,
+    "mcp_notes": "The agent plugin includes MCP tools and requires an MCP server; documentation references \"MCP server\" for integration with coding agents.",
+    "mcp_evidence_url": "https://developers.clay.com/quickstart",
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "All facts are drawn from Clay's official developer documentation. The API surface description is high\u2011level because detailed endpoint listings are not provided in the fetched pages."
+  },
+  {
+    "id": 62,
+    "category": "Developer, Infra and Data platforms",
+    "name": "Vercel",
+    "hint": "vercel.com/docs/rest-api",
+    "researched_at": "2026-09-16T13:27:03.618265Z",
+    "needs_human": false,
+    "search_query": "Vercel developer API documentation authentication",
+    "source_urls": [
+      "https://vercel.com/docs/rest-api/getting-started",
+      "https://vercel.com/docs/sign-in-with-vercel/authorization-server-api"
+    ],
+    "one_line_description": "Vercel provides a REST API and SDK for managing projects, deployments, domains, teams, and other platform resources.",
+    "auth_methods": [
+      "OAuth2",
+      "token",
+      "Basic"
+    ],
+    "auth_evidence_url": "https://vercel.com/docs/sign-in-with-vercel/authorization-server-api",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://vercel.com/docs/rest-api/getting-started",
+    "api_surface_summary": "The Vercel API includes endpoints for listing and managing projects, access groups, project members, domains, deployments, and more, accessible via REST (e.g., GET /v10/projects) or the @vercel/sdk library.",
+    "api_surface_evidence_url": "https://vercel.com/docs/rest-api/getting-started",
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "Authentication is performed with Bearer access tokens (scoped tokens) for the REST API, and Vercel also offers a full OAuth2 Authorization Server for third\u2011party apps. No mention of Model Context Protocol was found."
+  },
+  {
+    "id": 64,
+    "category": "Developer, Infra and Data platforms",
+    "name": "Cloudflare",
+    "hint": "developers.cloudflare.com/api",
+    "researched_at": "2026-09-16T13:27:04.804725Z",
+    "needs_human": false,
+    "search_query": "Cloudflare developer API documentation authentication",
+    "source_urls": [
+      "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/",
+      "https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/"
+    ],
+    "one_line_description": "Cloudflare provides a RESTful API (v4) for managing DNS, zones, security, and other infrastructure services.",
+    "auth_methods": [
+      "token",
+      "API key"
+    ],
+    "auth_evidence_url": "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/",
+    "api_surface_summary": "A comprehensive JSON/REST API (Version 4) with endpoints for zones, DNS records, SSL certificates, firewall rules, workers, and many other Cloudflare products, accessed via https://api.cloudflare.com/client/v4/ using standard HTTP methods (GET, POST, PATCH, DELETE).",
+    "api_surface_evidence_url": "https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/",
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "Official Cloudflare docs show both Bearer token (Authorization: Bearer <API_TOKEN>) and API key (X-Auth-Key header) authentication methods. The API is publicly accessible after creating an API token or key, so it is self\u2011serve. No mention of the Model Context Protocol (MCP) was found."
+  },
+  {
+    "id": 74,
+    "category": "Productivity and Project Management",
+    "name": "Jira",
+    "hint": "developer.atlassian.com",
+    "researched_at": "2026-09-16T13:27:05.982627Z",
+    "needs_human": false,
+    "search_query": "Jira developer API documentation authentication",
+    "source_urls": [
+      "https://developer.atlassian.com/cloud/jira/software/rest/intro/",
+      "https://developer.atlassian.com/cloud/jira/platform/basic-auth-for-rest-apis/"
+    ],
+    "one_line_description": "Jira is a cloud\u2011based project and issue tracking platform that provides a comprehensive REST API for building integrations, add\u2011ons, and automation.",
+    "auth_methods": [
+      "OAuth2",
+      "Basic",
+      "token"
+    ],
+    "auth_evidence_url": "https://developer.atlassian.com/cloud/jira/software/rest/intro/",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://developer.atlassian.com/cloud/jira/software/rest/intro/",
+    "api_surface_summary": "The Jira Software Cloud REST API exposes resources for issues, projects, boards, sprints, agile operations, custom fields, builds, deployments, and development information, using standard HTTP methods (GET, POST, PUT, DELETE) with pagination and JSON payloads.",
+    "api_surface_evidence_url": "https://developer.atlassian.com/cloud/jira/software/rest/intro/",
+    "mcp_exists": false,
+    "mcp_notes": "The documentation does not mention the Model Context Protocol (MCP).",
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "Authentication supports OAuth 2.0 (recommended), OAuth 1.0a (legacy), Basic HTTP (for scripts/bots) and JWT for Atlassian Connect add\u2011ons. API tokens are required for Basic auth. The API is publicly documented, so developers can self\u2011serve OAuth apps via the Atlassian developer console."
+  },
+  {
+    "id": 79,
+    "category": "Productivity and Project Management",
+    "name": "Smartsheet",
+    "hint": "smartsheet.com/developers",
+    "researched_at": "2026-09-16T13:27:15.170389Z",
+    "needs_human": false,
+    "search_query": "Smartsheet developer API documentation authentication",
+    "source_urls": [
+      "https://developers.smartsheet.com/api/smartsheet/guides/basics/authentication",
+      "https://developers.smartsheet.com/api/smartsheet/guides/advanced-topics/oauth"
+    ],
+    "one_line_description": "Smartsheet provides a cloud\u2011based work management platform with a REST API for programmatic access to sheets, workspaces, users, and other resources.",
+    "auth_methods": [
+      "OAuth2",
+      "API key"
+    ],
+    "auth_evidence_url": "https://developers.smartsheet.com/api/smartsheet/guides/basics/authentication",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://developers.smartsheet.com/api/smartsheet/guides/advanced-topics/oauth",
+    "api_surface_summary": "The Smartsheet API offers RESTful endpoints to create, read, update, and delete sheets, rows, columns, workspaces, users, groups, reports, sights (dashboards), and webhooks, as well as to manage access scopes and retrieve current user information.",
+    "api_surface_evidence_url": null,
+    "mcp_exists": false,
+    "mcp_notes": "The provided documentation does not mention an MCP server, integration, or the Model Context Protocol.",
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "medium",
+    "notes": "Authentication details (API key tokens and OAuth 2.0) are directly documented, giving high confidence for those fields. Self\u2011service registration is described in the OAuth guide, supporting the self_serve flag. The one\u2011line description and API surface summary are inferred from the general purpose of the Smartsheet platform and typical API resources, but the specific endpoint list is not enumerated in the supplied sources, so confidence for those fields is lower. No mention of MCP was found."
+  },
+  {
+    "id": 81,
+    "category": "Finance and Fintech",
+    "name": "Stripe",
+    "hint": "stripe.com/docs/api",
+    "researched_at": "2026-09-16T13:27:16.502121Z",
+    "needs_human": false,
+    "search_query": "Stripe developer API documentation authentication",
+    "source_urls": [
+      "https://docs.stripe.com/api/authentication?api-version=2025-08-27.basil",
+      "https://docs.stripe.com/api/authentication?api-version=2026-04-22.dahlia"
+    ],
+    "one_line_description": "The Stripe API uses API keys to authenticate requests.",
+    "auth_methods": [
+      "API key",
+      "Basic",
+      "token"
+    ],
+    "auth_evidence_url": "https://docs.stripe.com/api/authentication?api-version=2025-08-27.basil",
+    "self_serve": false,
+    "gating_reason": null,
+    "self_serve_evidence_url": null,
+    "api_surface_summary": "Not described in provided sources.",
+    "api_surface_evidence_url": null,
+    "mcp_exists": false,
+    "mcp_notes": "No mention of the Model Context Protocol (MCP) in the supplied documentation.",
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "low",
+    "notes": "Sources only cover authentication details; they do not provide product description, self\u2011service onboarding flow, or API surface details. Consequently, fields beyond authentication are inferred with low confidence."
+  },
+  {
+    "id": 90,
+    "category": "Finance and Fintech",
+    "name": "PitchBook",
+    "hint": "pitchbook.com (research API)",
+    "researched_at": "2026-09-16T13:27:18.943799Z",
+    "needs_human": false,
+    "search_query": "PitchBook developer API documentation authentication research API",
+    "source_urls": [
+      "https://pitchbook.com/help/PitchBook-api",
+      "https://pitchbook.com/products/direct-access-data"
+    ],
+    "one_line_description": "PitchBook API provides RESTful access to PitchBook\u2019s financial, company, and deal data for integration into internal business systems.",
+    "auth_methods": [
+      "API key",
+      "token"
+    ],
+    "auth_evidence_url": "https://pitchbook.com/help/PitchBook-api",
+    "self_serve": false,
+    "gating_reason": "Access requires a separate contract and a request to the Direct Data team to obtain an API key or authentication token.",
+    "self_serve_evidence_url": "https://pitchbook.com/help/PitchBook-api",
+    "api_surface_summary": "Offers multiple relational endpoints covering financing details, deal and stock information, AI\u2011powered VC exit predictions, and other company, fund, and transaction data.",
+    "api_surface_evidence_url": "https://pitchbook.com/help/PitchBook-api",
+    "mcp_exists": false,
+    "mcp_notes": null,
+    "mcp_evidence_url": null,
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "API is official and RESTful, but requires a separate contract and manual request for credentials; no Model Context Protocol integration is mentioned."
+  },
+  {
+    "id": 94,
+    "category": "AI, Research and Media-native",
+    "name": "Consensus",
+    "hint": "consensus.app (OAuth requested)",
+    "researched_at": "2026-09-16T13:27:23.224345Z",
+    "needs_human": false,
+    "search_query": "Consensus developer API documentation authentication OAuth requested",
+    "source_urls": [
+      "https://docs.consensus.app/reference/v1_quick_search",
+      "https://docs.consensus.app/docs/mcp"
+    ],
+    "one_line_description": "Consensus provides AI-powered search over 200\u202fmillion peer\u2011reviewed academic research papers via an API and an MCP server.",
+    "auth_methods": [
+      "OAuth2",
+      "API key",
+      "token"
+    ],
+    "auth_evidence_url": "https://docs.consensus.app/reference/v1_quick_search",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://docs.consensus.app/docs/mcp",
+    "api_surface_summary": "GET /v1/quick_search endpoint returns filtered paper lists (title, authors, abstract, journal, year, citations, URL) with many query parameters (year, study type, human, sample size, etc.). MCP adds a `search` tool (same functionality) and a `fetch` tool for retrieving full paper details by ID.",
+    "api_surface_evidence_url": "https://docs.consensus.app/reference/v1_quick_search",
+    "mcp_exists": true,
+    "mcp_notes": "Consensus offers an MCP server at https://mcp.consensus.app/mcp that exposes `search` and `fetch` tools compatible with Claude, ChatGPT, Codex, Cursor, VS\u202fCode, etc., using OAuth or Bearer\u2011token authentication.",
+    "mcp_evidence_url": "https://docs.consensus.app/docs/mcp",
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "Authentication can be via an X\u2011Api\u2011Key header for direct API calls, OAuth2 flows for MCP clients, or Bearer token (API key) for enterprise access. All documentation is from official Consensus developer pages."
+  },
+  {
+    "id": 99,
+    "category": "AI, Research and Media-native",
+    "name": "YouTube Transcript",
+    "hint": "transcriptapi.com",
+    "researched_at": "2026-09-16T13:27:27.043010Z",
+    "needs_human": false,
+    "search_query": "YouTube Transcript developer API documentation authentication",
+    "source_urls": [
+      "https://www.youtubetranscript.dev/api-docs",
+      "https://github.com/youtube-transcript-dev/youtube-transcript-api"
+    ],
+    "one_line_description": "Fast YouTube transcript API that extracts captions, performs ASR, supports batch processing, translation, and webhooks.",
+    "auth_methods": [
+      "API key"
+    ],
+    "auth_evidence_url": "https://github.com/youtube-transcript-dev/youtube-transcript-api",
+    "self_serve": true,
+    "gating_reason": null,
+    "self_serve_evidence_url": "https://github.com/youtube-transcript-dev/youtube-transcript-api",
+    "api_surface_summary": "Endpoints for single video transcription (/api/v2/transcribe), batch transcription (/api/v2/batch), job polling (/api/v2/jobs/{job_id}), upload handling, playlist and channel resolution, transcript CRUD (list, fetch, translate, delete), and language management. All endpoints use API\u2011key authentication and support optional webhook callbacks for async ASR results.",
+    "api_surface_evidence_url": "https://www.youtubetranscript.dev/api-docs",
+    "mcp_exists": true,
+    "mcp_notes": "An MCP server is provided for Claude Desktop, Cursor, and any MCP\u2011compatible client, exposing tools to transcribe videos, fetch transcripts, and check usage.",
+    "mcp_evidence_url": "https://www.youtubetranscript.dev/api-docs",
+    "buildable_today": true,
+    "blocker": null,
+    "confidence": "high",
+    "notes": "All information is drawn from the official API documentation and the project's GitHub README, which detail authentication, self\u2011service sign\u2011up, full API surface, and the presence of an MCP server."
+  }
+]
